@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RealLife Problems & Community Solutions Hub</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts: Inter & Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Chart.js for Impact vs Feasibility Matrix -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --bs-font-sans-serif: 'Inter', sans-serif;
+            --brand-primary: #0d9488;
+            --brand-primary-hover: #0f766e;
+            --brand-accent: #6366f1;
+            --brand-dark: #0f172a;
+            --bg-light: #f8fafc;
+            --card-bg-light: #ffffff;
+            --text-main: #1e293b;
+            --border-color: #e2e8f0;
+        }
+
+        [data-theme="dark"] {
+            --bs-body-bg: #0f172a;
+            --bs-body-color: #f1f5f9;
+            --card-bg-light: #1e293b;
+            --text-main: #f8fafc;
+            --border-color: #334155;
+            --bg-light: #020617;
+        }
+ body {
+            font-family: var(--bs-font-sans-serif);
+            background-color: var(--bs-body-bg);
+            color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        h1, h2, h3, h4, h5, .font-heading {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Modern Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(148, 163, 184, 0.5);
+            border-radius: 9999px;
+        }
+ /* Glassmorphism Navbar */
+        .navbar-custom {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        [data-theme="dark"] .navbar-custom {
+            background: rgba(15, 23, 42, 0.85);
+        }
+
+        /* Hero Section Styling */
+        .hero-section {
+            background: linear-gradient(135deg, rgba(13, 148, 136, 0.08) 0%, rgba(99, 102, 241, 0.08) 100%);
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+  .hero-badge {
+            background: rgba(13, 148, 136, 0.1);
+            color: var(--brand-primary);
+            border: 1px solid rgba(13, 148, 136, 0.2);
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 0.35rem 0.85rem;
+            border-radius: 50rem;
+        }
+        /* Stat Cards */
+        .stat-card {
+            background: var(--card-bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.25rem;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+ /* Problem Cards */
+        .problem-card {
+            background: var(--card-bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 1.25rem;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .problem-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--brand-primary);
+            box-shadow: 0 12px 24px -6px rgba(13, 148, 136, 0.15);
+        }
+         /* Custom Badges */
+        .badge-category {
+            background-color: rgba(99, 102, 241, 0.1);
+            color: #6366f1;
+            font-weight: 600;
+            padding: 0.35em 0.7em;
+            border-radius: 0.5rem;
+        }
+        .badge-urgency-high {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+        .badge-urgency-medium {
+            background-color: rgba(245, 158, 11, 0.1);
+            color: #f59e0b;
+        }
+         .badge-urgency-low {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+
+        /* Action Buttons */
+        .btn-brand {
+            background-color: var(--brand-primary);
+            color: #ffffff;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            padding: 0.6rem 1.25rem;
+            border: none;
+            transition: all 0.2s ease;
+        }
+           .btn-brand:hover {
+            background-color: var(--brand-primary-hover);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+        }
+
+        .btn-outline-brand {
+            border: 1.5px solid var(--brand-primary);
+            color: var(--brand-primary);
+            border-radius: 0.75rem;
+            font-weight: 600;
+            background: transparent;
+            transition: all 0.2s ease;
+        }
+        .btn-outline-brand:hover {
+            background-color: var(--brand-primary);
+            color: #ffffff;
+        }
+
+        /* Matrix Chart Wrapper */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 380px;
+            background: var(--card-bg-light);
+            border-radius: 1.25rem;
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+        }
+
+        /* Modal Enhancements */
+        .modal-content {
+            background-color: var(--card-bg-light);
+            border: 1px solid var(--border-color);
+            border-radius: 1.5rem;
+            color: var(--text-main);
+        }
+  /* Solution Items */
+        .solution-item {
+            background: rgba(241, 245, 249, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1rem;
+            transition: background-color 0.2s ease;
+        }
+        [data-theme="dark"] .solution-item {
+            background: rgba(30, 41, 59, 0.6);
+        }
+
+        .upvote-btn {
+            border: 1px solid var(--border-color);
+            background: var(--card-bg-light);
+            color: var(--text-main);
+            border-radius: 0.6rem;
+            padding: 0.3rem 0.6rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .upvote-btn:hover, .upvote-btn.active {
+            background: var(--brand-primary);
+            color: #ffffff;
+            border-color: var(--brand-primary);
+        }
+
+        .toast-container {
+            z-index: 1090;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg sticky-top navbar-custom">
+        <div class="container-fluid max-w-7xl px-lg-4">
+            <!-- Brand Logo -->
+            <a class="navbar-brand d-flex items-center gap-2 font-heading fw-bold text-decoration-none" href="#">
+                <div class="bg-teal-600 text-white rounded-3 p-2 d-inline-flex align-items-center justify-content-center" style="background-color: var(--brand-primary);">
+                    <i data-lucide="lightbulb" class="w-5 h-5"></i>
+                </div>
+                <span class="fs-4 tracking-tight" style="color: var(--text-main);">Solve<span style="color: var(--brand-primary);">Hub</span></span>
+            </a>
+              <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <i data-lucide="menu"></i>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-lg-1">
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium px-3 active" href="#explore">Browse Problems</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium px-3" href="#matrix">Impact Matrix</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium px-3" href="#crowdsourced">Crowdsourced Ideas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-medium px-3" href="#resources">Resources & Toolkit</a>
+                    </li>
+                </ul>
+                 <!-- Right Nav Elements -->
+                <div class="d-flex align-items-center gap-3">
+                    <button id="themeToggle" class="btn btn-link text-decoration-none p-2 rounded-circle" title="Toggle Theme" style="color: var(--text-main);">
+                        <i data-lucide="moon" id="themeIcon"></i>
+                    </button>
+
+                    <button class="btn btn-brand d-flex align-items-center gap-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#submitProblemModal">
+                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                        <span>Submit Problem</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+     <section class="hero-section py-5 py-lg-6">
+        <div class="container max-w-7xl px-lg-4">
+            <div class="row align-items-center gy-5">
+                <div class="col-lg-7">
+                    <div class="d-inline-flex align-items-center gap-2 hero-badge mb-3">
+                        <i data-lucide="sparkles" class="w-4 h-4"></i>
+                        <span>Empowering Grassroots Innovation</span>
+                    </div>
+                    <h1 class="display-4 fw-extrabold text-slate-900 mb-3 leading-tight" style="color: var(--text-main);">
+                        Solving Everyday Real-World Problems Together.
+                    </h1>
+                    <p class="lead text-muted mb-4 pe-lg-4" style="max-width: 620px;">
+                        An open platform where citizens, students, and creators log daily friction points, analyze root causes, and collaborate on actionable, high-impact solutions.
+                    </p>
+                    <div class="d-flex flex-wrap align-items-center gap-3">
+                        <a href="#explore" class="btn btn-brand btn-lg d-flex align-items-center gap-2">
+                            <span>Explore Problems</span>
+                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </a>
+                        <button class="btn btn-outline-brand btn-lg" data-bs-toggle="modal" data-bs-target="#submitProblemModal">
+                            Submit a Challenge
+                        </button>
+                    </div>
+                </div>
+                 <div class="col-lg-5">
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="stat-card">
+                                <div class="d-flex align-items-center gap-2 text-muted mb-2">
+                                    <i data-lucide="file-text" class="w-4 h-4 text-teal"></i>
+                                    <span class="small font-medium">Problems Logged</span>
+                                </div>
+                                <h3 class="fw-bold mb-0" id="statProblems">142</h3>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card">
+                                <div class="d-flex align-items-center gap-2 text-muted mb-2">
+                                    <i data-lucide="cpu" class="w-4 h-4 text-indigo"></i>
+                                    <span class="small font-medium">Solutions Pitched</span>
+                                </div>
+                                <h3 class="fw-bold mb-0" id="statSolutions">389</h3>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card">
+                                <div class="d-flex align-items-center gap-2 text-muted mb-2">
+                                    <i data-lucide="users" class="w-4 h-4 text-emerald"></i>
+                                    <span class="small font-medium">Active Contributors</span>
+                                </div>
+                                <h3 class="fw-bold mb-0" id="statContributors">1,250</h3>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="stat-card">
+                                <div class="d-flex align-items-center gap-2 text-muted mb-2">
+                                    <i data-lucide="heart" class="w-4 h-4 text-rose"></i>
+                                    <span class="small font-medium">Lives Impacted</span>
+                                </div>
+                                <h3 class="fw-bold mb-0" id="statLives">15.4k</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Problem Explorer Section -->
+    <section id="explore" class="py-5">
+        <div class="container max-w-7xl px-lg-4">
+            
+            <div class="d-flex flex-column flex-md-row md:align-items-center justify-content-between gap-3 mb-4">
+                <div>
+                    <h2 class="fw-bold fs-2 mb-1">Interactive Problem Explorer</h2>
+                    <p class="text-muted small mb-0">Discover pressing daily challenges crowdsourced from around the world.</p>
+                </div>
+                
+                <!-- Search Box -->
+                <div class="position-relative" style="min-width: 280px;">
+                    <i data-lucide="search" class="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted w-4 h-4"></i>
+                    <input type="text" id="searchInput" class="form-control ps-5 py-2 rounded-3" placeholder="Search keywords, tags, or causes...">
+                </div>
+            </div>
+             <!-- Filter Toolbar -->
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 p-3 rounded-4 mb-4" style="background: var(--card-bg-light); border: 1px solid var(--border-color);">
+                <!-- Categories -->
+                <div class="d-flex flex-wrap gap-1.5" id="categoryFilters">
+                    <button class="btn btn-sm btn-brand filter-cat-btn" data-category="All">All Categories</button>
+                    <button class="btn btn-sm btn-outline-secondary filter-cat-btn" data-category="Urban Mobility">Urban Mobility</button>
+                    <button class="btn btn-sm btn-outline-secondary filter-cat-btn" data-category="Environment & Sustainability">Environment</button>
+                    <button class="btn btn-sm btn-outline-secondary filter-cat-btn" data-category="Daily Productivity">Productivity</button>
+                    <button class="btn btn-sm btn-outline-secondary filter-cat-btn" data-category="Health & Wellness">Health</button>
+                    <button class="btn btn-sm btn-outline-secondary filter-cat-btn" data-category="Education & Learning">Education</button>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <select id="urgencyFilter" class="form-select form-select-sm rounded-3">
+                        <option value="All">All Urgencies</option>
+                        <option value="High">High Urgency</option>
+                        <option value="Medium">Medium Urgency</option>
+                        <option value="Low">Low Urgency</option>
+                    </select>
+
+                    <select id="sortBySelect" class="form-select form-select-sm rounded-3">
+                        <option value="upvotes">Most Upvoted</option>
+                        <option value="impact">Highest Impact</option>
+                        <option value="newest">Newest First</option>
+                    </select>
+                </div>
+            </div>
+             <!-- Dynamic Problem Cards Grid -->
+            <div class="row g-4" id="problemsGrid">
+                <!-- Javascript populated cards will render here -->
+            </div>
+
+            <!-- Empty State Placeholder -->
+            <div id="emptyState" class="text-center py-5 d-none">
+                <i data-lucide="inbox" class="w-12 h-12 text-muted mb-3"></i>
+                <h5 class="fw-bold">No matching problems found</h5>
+                <p class="text-muted small">Try tweaking your search keywords or category filters.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Impact vs. Feasibility Matrix Tool Section -->
+    <section id="matrix" class="py-5" style="background: var(--bg-light); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+        <div class="container max-w-7xl px-lg-4">
+            <div class="row align-items-center gy-4 mb-4">
+                <div class="col-lg-7">
+                    <span class="badge bg-indigo-100 text-indigo-700 mb-2 px-3 py-2 rounded-pill font-semibold">Strategic Decision Tool</span>
+                    <h2 class="fw-bold fs-2 mb-2">Impact vs. Feasibility Matrix</h2>
+                    <p class="text-muted mb-0">Prioritize solutions by evaluating potential social/practical impact against technical and economic feasibility. Aim for top-right <strong>Quick Wins</strong>!</p>
+                </div>
+                <div class="col-lg-5 text-lg-end">
+                    <button class="btn btn-outline-brand btn-sm" id="resetMatrixZoom">Reset Matrix View</button>
+                </div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-8">
+                    <div class="chart-container shadow-sm">
+                        <canvas id="matrixChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Interactive Matrix Plotter Form -->
+                <div class="col-lg-4">
+                    <div class="card border-0 shadow-sm rounded-4 h-100 p-4" style="background: var(--card-bg-light); border: 1px solid var(--border-color) !important;">
+                        <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
+                            <i data-lucide="target" class="text-teal-600"></i>
+                            <span>Plot Solution Idea</span>
+                        </h5>
+                        <form id="matrixPlotForm" class="d-flex flex-column gap-3">
+                            <div>
+                                <label class="form-label small font-semibold">Solution Title</label>
+                                <input type="text" id="plotTitle" class="form-control rounded-3" placeholder="e.g. Community Composting Locker" required>
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label class="form-label small font-semibold">Impact (1-10)</label>
+                                    <input type="number" id="plotImpact" min="1" max="10" class="form-control rounded-3" value="8" required>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label small font-semibold">Feasibility (1-10)</label>
+                                    <input type="number" id="plotFeasibility" min="1" max="10" 
+                                    class="form-control rounded-3" value="7" required>
+                                </div>
+                            </div>
+      <button type="submit" class="btn btn-brand w-100 mt-2">
+                                Add to Matrix Visualizer
+                            </button>
+                        </form>
+
+                        <hr class="my-4" style="border-color: var(--border-color);">
+
+                        <div class="small">
+                            <span class="font-bold d-block mb-2 text-muted uppercase tracking-wider text-xs">Quadrant Key:</span>
+                            <ul class="list-unstyled d-flex flex-column gap-1.5 mb-0 text-xs">
+                                <li class="d-flex align-items-center gap-2">
+                                    <span class="rounded-circle bg-emerald-500 d-inline-block" style="width: 10px; height: 10px; background-color: #10b981;"></span>
+                                    <span><strong>Top Right:</strong> Quick Wins (High Impact & Feasible)</span>
+                                </li>
+                                <li class="d-flex align-items-center gap-2">
+                                    <span class="rounded-circle bg-indigo-500 d-inline-block" style="width: 10px; height: 10px; background-color: #6366f1;"></span>
+                                    <span><strong>Top Left:</strong> Major Strategic Initiatives</span>
+                                </li>
+                                <li class="d-flex align-items-center gap-2">
+                                    <span class="rounded-circle bg-amber-500 d-inline-block" style="width: 10px; height: 10px; background-color: #f59e0b;"></span>
+                                    <span><strong>Bottom Right:</strong> Fill-In Tasks / Minor Fixes</span>
+                                </li>
+                                              </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resources & Frameworks Section -->
+    <section id="resources" class="py-5">
+        <div class="container max-w-7xl px-lg-4">
+            <div class="text-center max-w-2xl mx-auto mb-5">
+                <span class="badge bg-teal-100 text-teal-800 px-3 py-2 rounded-pill font-semibold mb-2">Problem Solving Toolkit</span>
+                <h2 class="fw-bold fs-2">Framing & Root Cause Analysis</h2>
+                <p class="text-muted">A structured problem definition prevents building perfect solutions for the wrong questions.</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Tool 1: 5-Whys Framework -->
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4" style="background: var(--card-bg-light); border: 1px solid var(--border-color) !important;">
+                        <div class="rounded-3 p-2 bg-teal-50 text-teal-600 d-inline-flex align-items-center justify-center mb-3" style="width: 42px; height: 42px;">
+                            <i data-lucide="help-circle"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">The 5-Whys Method</h5>
+                        <p class="text-muted small mb-3">Iteratively drill down from surface symptoms to uncover fundamental operational or mechanical root causes.</p>
+                        <div class="p-3 rounded-3 bg-slate-100 text-slate-800 text-xs font-mono mb-3" style="background: rgba(0,0,0,0.03);">
+                            Symptom → Why? → Why? → Why? → Why? → Root Cause
+                        </div>
+                        <button class="btn btn-sm btn-outline-brand mt-auto text-start" onclick="copyTemplate('5whys')">Copy 5-Whys Template</button>
+                    </div>
+                </div>
+                       <!-- Tool 2: Root Cause Canvas -->
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4" style="background: var(--card-bg-light); border: 1px solid var(--border-color) !important;">
+                        <div class="rounded-3 p-2 bg-indigo-50 text-indigo-600 d-inline-flex align-items-center justify-center mb-3" style="width: 42px; height: 42px;">
+                            <i data-lucide="git-fork"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">Ishikawa Fishbone Guide</h5>
+                        <p class="text-muted small mb-3">Categorize contributors into People, Process, Environment, and Technology factors before designing tech.</p>
+                        <div class="p-3 rounded-3 bg-slate-100 text-slate-800 text-xs font-mono mb-3" style="background: rgba(0,0,0,0.03);">
+                            [People | Process | Tech | Environment] → Effect
+                        </div>
+                        <button class="btn btn-sm btn-outline-brand mt-auto text-start" onclick="copyTemplate('fishbone')">Copy Fishbone Canvas</button>
+                    </div>
+                </div>
+
+                <!-- Tool 3: Rapid Prototyping -->
+                <div class="col-md-4">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4" style="background: var(--card-bg-light); border: 1px solid var(--border-color) !important;">
+                        <div class="rounded-3 p-2 bg-amber-50 text-amber-600 d-inline-flex align-items-center justify-center mb-3" style="width: 42px; height: 42px;">
+                            <i data-lucide="rocket"></i>
+                        </div>
+                        <h5 class="fw-bold mb-2">MVP Hypothesis Test</h5>
+                        <p class="text-muted small mb-3">Define the smallest testable prototype hypothesis to validate user adoption with minimal engineering effort.</p>
+                        <div class="p-3 rounded-3 bg-slate-100 text-slate-800 text-xs font-mono mb-3" style="background: rgba(0,0,0,0.03);">
+                            We believe [Target] will [Action] if we build [Feature].
+                        </div>
+                        <button class="btn btn-sm btn-outline-brand mt-auto text-start" onclick="copyTemplate('mvp')">Copy MVP Formula</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Submit Problem Modal -->
+    <div class="modal fade" id="submitProblemModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content p-2">
+                <div class="modal-header border-0 pb-0">
+                    <div>
+                        <h4 class="modal-title fw-bold">Submit a Real Life Challenge</h4>
+                        <p class="text-muted small mb-0">Describe a daily friction point to crowdsource solutions from developers and innovators.</p>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="submitProblemForm" class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label font-semibold small">Problem Title *</label>
+                            <input type="text" id="newTitle" class="form-control rounded-3" placeholder="e.g. Bus Stop Overcrowding during Rain Storms" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label font-semibold small">Category *</label>
+                            <select id="newCategory" class="form-select rounded-3" required>
+                                <option value="Urban Mobility">Urban Mobility</option>
+                                <option value="Environment & Sustainability">Environment & Sustainability</option>
+                                <option value="Daily Productivity">Daily Productivity</option>
+                                <option value="Health & Wellness">Health & Wellness</option>
+                                <option value="Education & Learning">Education & Learning</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label font-semibold small">Urgency Level *</label>
+                            <select id="newUrgency" class="form-select rounded-3" required>
+                                <option value="High">High (Immediate Pain Point)</option>
+                                <option value="Medium" selected>Medium (Recurring Nuisance)</option>
+                                <option value="Low">Low (Inconvenience)</option>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label font-semibold small">Detailed Description & Root Cause *</label>
+                            <textarea id="newDescription" class="form-control rounded-3" rows="3" placeholder="Explain what happens, when it happens, and why existing solutions fail..." required></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label font-semibold small">Target Audience / Who is Affected?</label>
+                            <input type="text" id="newAudience" class="form-control rounded-3" placeholder="e.g. Commuters, Elderly Residents, Remote Students">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label font-semibold small">Desired Outcome</label>
+                            <input type="text" id="newOutcome" class="form-control rounded-3" placeholder="e.g. Real-time passenger count visibility">
+                        </div>
+                        <div class="col-12 d-flex justify-content-end gap-2 pt-3 border-top mt-4">
+                            <button type="button" class="btn btn-light rounded-3" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-brand rounded-3 px-4">Publish Problem</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Problem Details & Solutions Modal -->
+    <div class="modal fade" id="solutionDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content p-2">
+                <div class="modal-header border-0 pb-0">
+                    <div class="d-flex align-items-center gap-2">
+                        <span id="modalCategoryBadge" class="badge badge-category">Category</span>
+                        <span id="modalUrgencyBadge" class="badge">Urgency</span>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-4">
+                        <!-- Left Column: Problem Overview -->
+                        <div class="col-lg-5 border-end pe-lg-4" style="border-color: var(--border-color) !important;">
+                            <h3 class="fw-bold mb-3" id="modalProblemTitle">Problem Title</h3>
+                            <p class="text-muted leading-relaxed mb-4" id="modalProblemDesc">Problem Description</p>
+                            
+                            <div class="p-3 rounded-3 bg-slate-100 dark:bg-slate-800 mb-3" style="background: rgba(0,0,0,0.03);">
+                                <span class="text-xs font-bold uppercase tracking-wider text-muted d-block mb-1">Target Demographic</span>
+                                <p class="small mb-0 font-medium" id="modalTargetAudience">General Population</p>
+                            </div>
+
+                            <div class="p-3 rounded-3 bg-slate-100 dark:bg-slate-800 mb-4" style="background: rgba(0,0,0,0.03);">
+                                <span class="text-xs font-bold uppercase tracking-wider text-muted d-block mb-1">Desired Impact / Outcome</span>
+                                <p class="small mb-0 font-medium" id="modalDesiredOutcome">Better daily workflow</p>
+                            </div>
+
+                            <button class="btn btn-outline-brand w-100 d-flex align-items-center justify-content-center gap-2" id="modalUpvoteBtn">
+                                <i data-lucide="thumbs-up" class="w-4 h-4"></i>
+                                <span>Upvote Problem (<span id="modalUpvoteCount">0</span>)</span>
+                            </button>
+                        </div>
+
+                        <!-- Right Column: Crowdsourced Solutions -->
+                        <div class="col-lg-7 ps-lg-4">
+                            <div class="d-flex align-items-center justify-between mb-3">
+                                <h5 class="fw-bold mb-0">Crowdsourced Proposed Solutions</h5>
+                                <span class="badge bg-slate-200 text-slate-800 rounded-pill" id="solutionCountBadge">0 Ideas</span>
+                            </div>
+
+                            <!-- Proposed Solutions List -->
+                            <div id="solutionsList" class="d-flex flex-column gap-3 mb-4 custom-scrollbar" style="max-height: 280px; overflow-y: auto;">
+                                <!-- Javascript will render solutions here -->
+                            </div>
+
+                            <!-- Pitch New Solution Form -->
+                            <form id="pitchSolutionForm" class="p-3 rounded-4 border" style="background: var(--bg-light); border-color: var(--border-color) !important;">
+                                <h6 class="fw-bold mb-2">Pitch Your Idea or Solution</h6>
+                                <div class="mb-2">
+                                    <textarea id="newSolutionText" class="form-control rounded-3 text-sm" rows="2" placeholder="Describe a technical, physical, or community-driven solution concept..." required></textarea>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between gap-2">
+                                    <div class="form-check form-switch text-xs">
+                                        <input class="form-check-input" type="checkbox" id="buildingInterestCheck">
+                                        <label class="form-check-label text-muted" for="buildingInterestCheck">I want to help build this MVP</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-brand btn-sm">Submit Solution</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="py-5 mt-5 border-top" style="background: var(--card-bg-light); border-color: var(--border-color) !important;">
+        <div class="container max-w-7xl px-lg-4">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-4">
+                    <a class="d-flex items-center gap-2 font-heading fw-bold text-decoration-none mb-3" href="#">
+                        <div class="bg-teal-600 text-white rounded-3 p-1.5 d-inline-flex align-items-center justify-content-center" style="background-color: var(--brand-primary);">
+                            <i data-lucide="lightbulb" class="w-4 h-4"></i>
+                        </div>
+                        <span class="fs-5" style="color: var(--text-main);">Solve<span style="color: var(--brand-primary);">Hub</span></span>
+                    </a>
+                    <p class="text-muted small max-w-sm">An open ecosystem dedicated to turning everyday human annoyances and systemic municipal challenges into innovative products.</p>
+                </div>
+
+                <div class="col-6 col-lg-2">
+                    <h6 class="fw-bold mb-3 small uppercase tracking-wider text-muted">Platform</h6>
+                    <ul class="list-unstyled text-sm d-flex flex-column gap-2 mb-0">
+                        <li><a href="#explore" class="text-decoration-none text-muted">Explore Feed</a></li>
+                        <li><a href="#matrix" class="text-decoration-none text-muted">Impact Matrix</a></li>
+                        <li><a href="#resources" class="text-decoration-none text-muted">Hackathon Tools</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-6 col-lg-2">
+                    <h6 class="fw-bold mb-3 small uppercase tracking-wider text-muted">Community</h6>
+                    <ul class="list-unstyled text-sm d-flex flex-column gap-2 mb-0">
+                        <li><a href="#" class="text-decoration-none text-muted">Guidelines</a></li>
+                        <li><a href="#" class="text-decoration-none text-muted">Open Source API</a></li>
+                        <li><a href="#" class="text-decoration-none text-muted">Discord Server</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4">
+                    <h6 class="fw-bold mb-3 small uppercase tracking-wider text-muted">Weekly Problem Brief</h6>
+                    <p class="text-muted small mb-3">Get the top 3 unaddressed real-life problems delivered to your inbox every Monday.</p>
+                    <div class="input-group">
+                        <input type="email" class="form-control rounded-start-3" placeholder="developer@example.com">
+                        <button class="btn btn-brand rounded-end-3" type="button">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between pt-4 border-top text-xs text-muted" style="border-color: var(--border-color) !important;">
+                <p class="mb-0">&copy; 2026 RealLife Problems Hub. Built for open-source innovators.</p>
+                <div class="d-flex gap-3 mt-2 mt-sm-0">
+                    <a href="#" class="text-muted text-decoration-none">Privacy Policy</a>
+                    <a href="#" class="text-muted text-decoration-none">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+        <div id="appToast" class="toast align-items-center text-white bg-dark border-0 rounded-3 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage">
+                    Action executed successfully.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // --- State Management ---
+        let problemsData = [
+            {
+                id: 1,
+                title: "Apartment Lobby Package Theft & Overcrowding",
+                category: "Urban Mobility",
+                urgency: "High",
+                impact: 8,
+                feasibility: 9,
+                description: "Multi-family buildings face overflowing delivery boxes in lobby hallways, causing fire hazards and high theft rates for non-doorman units.",
+                audience: "Urban apartment renters, delivery drivers",
+                outcome: "Secure, low-cost modular lobby lockers with temporary PIN access",
+                upvotes: 124,
+                bookmarked: false,
+                status: "In Development",
+                solutions: [
+                    { id: 101, text: "Open-source smart lock relay retrofitting unused basement closets into delivery lockers.", upvotes: 34, author: "DevMarcus", interestedToBuild: true },
+                    { id: 102, text: "QR code scanner camera app that logs package arrival times and notifies residents.", upvotes: 18, author: "Sarah_UX", interestedToBuild: false }
+                ]
+            },
+            {
+                id: 2,
+                title: "Single-Resident Produce Spoilage in Supermarkets",
+                category: "Environment & Sustainability",
+                urgency: "Medium",
+                impact: 9,
+                feasibility: 7,
+                description: "Groceries package fresh vegetables in family bulk sizes, causing solo living adults to waste up to 30% of perishable groceries weekly.",
+                audience: "Solo dwellers, students, elderly citizens",
+                outcome: "Modular micro-portion packaging or community ingredient swaps",
+                upvotes: 210,
+                bookmarked: true,
+                status: "Open",
+                solutions: [
+                    { id: 201, text: "Hyperlocal ingredient swap kiosk in apartment lobbies for trading unneeded produce.", upvotes: 42, author: "EcoHacker", interestedToBuild: true }
+                ]
+            },
+            {
+                id: 3,
+                title: "Fragmented Remote Notification Context Switching",
+                category: "Daily Productivity",
+                urgency: "High",
+                impact: 7,
+                feasibility: 8,
+                description: "Knowledge workers spend over 2 hours daily re-focusing due to scattered alerts across Slack, Email, Jira, and WhatsApp without priority hierarchy.",
+                audience: "Remote software engineers, freelancers, project leads",
+                outcome: "Unified urgent-only notification filter with AI priority synthesis",
+                upvotes: 185,
+                bookmarked: false,
+                status: "Open",
+                solutions: [
+                    { id: 301, text: "Local desktop menu bar app that aggregates Slack & Gmail and holds alerts until planned focus breaks.", upvotes: 56, author: "FocusNinja", interestedToBuild: true }
+                ]
+            },
+            {
+                id: 4,
+                title: "Prescription Medication Adherence for Seniors",
+                category: "Health & Wellness",
+                urgency: "High",
+                impact: 9,
+                feasibility: 6,
+                description: "Elderly living independently frequently mix up daily pill times due to hard-to-read tiny pill bottle labels.",
+                audience: "Seniors over 70, family caregivers",
+                outcome: "High-contrast tactile smart pill dispensers with audio reminders",
+                upvotes: 156,
+                bookmarked: false,
+                status: "Solved",
+                solutions: [
+                    { id: 401, text: "3D printable color-coded pill cap clicker with daily rotatable dials.", upvotes: 89, author: "HealthMaker", interestedToBuild: true }
+                ]
+            }
+        ];
+
+        let activeCategory = 'All';
+        let activeUrgency = 'All';
+        let activeSort = 'upvotes';
+        let currentOpenProblemId = null;
+        let matrixChartInstance = null;
+
+        // --- DOM Elements ---
+        const problemsGrid = document.getElementById('problemsGrid');
+        const emptyState = document.getElementById('emptyState');
+        const searchInput = document.getElementById('searchInput');
+        const categoryFilters = document.getElementById('categoryFilters');
+        const urgencyFilter = document.getElementById('urgencyFilter');
+        const sortBySelect = document.getElementById('sortBySelect');
+        const themeToggleBtn = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+
+        // --- Initialize Application ---
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderProblems();
+            initMatrixChart();
+            setupEventListeners();
+        });
+
+        // --- Theme Management ---
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            themeIcon.setAttribute('data-lucide', newTheme === 'dark' ? 'sun' : 'moon');
+            lucide.createIcons();
+            if (matrixChartInstance) {
+                matrixChartInstance.options.scales.x.grid.color = newTheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
+                matrixChartInstance.options.scales.y.grid.color = newTheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
+                matrixChartInstance.update();
+            }
+        });
+
+        // --- Render Problems Grid ---
+        function renderProblems() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+
+            let filtered = problemsData.filter(p => {
+                const matchesCategory = activeCategory === 'All' || p.category === activeCategory;
+                const matchesUrgency = activeUrgency === 'All' || p.urgency === activeUrgency;
+                const matchesSearch = p.title.toLowerCase().includes(searchTerm) || 
+                                      p.description.toLowerCase().includes(searchTerm) ||
+                                      p.category.toLowerCase().includes(searchTerm);
+                return matchesCategory && matchesUrgency && matchesSearch;
+            });
+
+            // Sorting Logic
+            filtered.sort((a, b) => {
+                if (activeSort === 'upvotes') return b.upvotes - a.upvotes;
+                if (activeSort === 'impact') return b.impact - a.impact;
+                if (activeSort === 'newest') return b.id - a.id;
+                return 0;
+            });
+
+            problemsGrid.innerHTML = '';
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('d-none');
+            } else {
+                emptyState.classList.add('d-none');
+                filtered.forEach(problem => {
+                    const urgencyClass = problem.urgency === 'High' ? 'badge-urgency-high' :
+                                         problem.urgency === 'Medium' ? 'badge-urgency-medium' : 'badge-urgency-low';
+                    
+                    const cardCol = document.createElement('div');
+                    cardCol.className = 'col-md-6 col-lg-4';
+                    cardCol.innerHTML = `
+                        <div class="problem-card p-4">
+                            <div>
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <span class="badge badge-category">${problem.category}</span>
+                                    <span class="badge ${urgencyClass}">${problem.urgency} Urgency</span>
+                                </div>
+
+                                <h5 class="fw-bold mb-2 text-truncate-2">${problem.title}</h5>
+                                <p class="text-muted small mb-4 line-clamp-3">${problem.description}</p>
+                            </div>
+
+                            <div>
+                                <div class="d-flex align-items-center justify-content-between pt-3 border-top mb-3" style="border-color: var(--border-color) !important;">
+                                    <div class="d-flex align-items-center gap-1 text-xs text-muted">
+                                        <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i>
+                                        <span>Impact: <strong>${problem.impact}/10</strong></span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-1 text-xs text-muted">
+                                        <i data-lucide="message-square" class="w-3.5 h-3.5 text-indigo-500"></i>
+                                        <span>${problem.solutions.length} Solutions</span>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center justify-content-between gap-2">
+                                    <button class="upvote-btn d-flex align-items-center gap-1" onclick="toggleUpvote(event, ${problem.id})">
+                                        <i data-lucide="thumbs-up" class="w-3.5 h-3.5"></i>
+                                        <span>${problem.upvotes}</span>
+                                    </button>
+
+                                    <button class="btn btn-outline-brand btn-sm d-flex align-items-center gap-1" onclick="openProblemDetails(${problem.id})">
+                                        <span>View & Pitch</span>
+                                        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    problemsGrid.appendChild(cardCol);
+                });
+            }
+            lucide.createIcons();
+            updateStatsCounters();
+        }
+
+        // --- Upvote Function ---
+        function toggleUpvote(e, problemId) {
+            e.stopPropagation();
+            const problem = problemsData.find(p => p.id === problemId);
+            if (problem) {
+                problem.upvotes++;
+                renderProblems();
+                showToast(`Upvoted "${problem.title.substring(0, 25)}..."`);
+            }
+        }
+
+        // --- Open Problem Details Modal ---
+        function openProblemDetails(problemId) {
+            currentOpenProblemId = problemId;
+            const problem = problemsData.find(p => p.id === problemId);
+            if (!problem) return;
+
+            document.getElementById('modalProblemTitle').innerText = problem.title;
+            document.getElementById('modalProblemDesc').innerText = problem.description;
+            document.getElementById('modalCategoryBadge').innerText = problem.category;
+            document.getElementById('modalUrgencyBadge').innerText = `${problem.urgency} Urgency`;
+            document.getElementById('modalUrgencyBadge').className = `badge ${
+                problem.urgency === 'High' ? 'badge-urgency-high' :
+                problem.urgency === 'Medium' ? 'badge-urgency-medium' : 'badge-urgency-low'
+            }`;
+            document.getElementById('modalTargetAudience').innerText = problem.audience || 'General public';
+            document.getElementById('modalDesiredOutcome').innerText = problem.outcome || 'General workflow improvement';
+            document.getElementById('modalUpvoteCount').innerText = problem.upvotes;
+
+            renderSolutionsList(problem.solutions);
+
+            const modal = new bootstrap.Modal(document.getElementById('solutionDetailsModal'));
+            modal.show();
+        }
+
+        // --- Render Solutions in Modal ---
+        function renderSolutionsList(solutions) {
+            const container = document.getElementById('solutionsList');
+            document.getElementById('solutionCountBadge').innerText = `${solutions.length} Ideas`;
+            container.innerHTML = '';
+
+            if (solutions.length === 0) {
+                container.innerHTML = `<p class="text-muted small italic my-3 text-center">No solution pitches yet. Be the first to propose one below!</p>`;
+                return;
+            }
+
+            solutions.forEach(sol => {
+                const div = document.createElement('div');
+                div.className = 'solution-item d-flex justify-content-between align-items-start gap-3';
+                div.innerHTML = `
+                    <div>
+                        <p class="small mb-1 font-medium">${sol.text}</p>
+                        <div class="d-flex align-items-center gap-2 text-xs text-muted">
+                            <span>Pitched by <strong>@${sol.author}</strong></span>
+                            ${sol.interestedToBuild ? '<span class="badge bg-emerald-100 text-emerald-700">Wants to Build</span>' : ''}
+                        </div>
+                    </div>
+                    <button class="upvote-btn btn-sm text-xs d-flex align-items-center gap-1" onclick="upvoteSolution(${sol.id})">
+                        <i data-lucide="arrow-big-up" class="w-3.5 h-3.5"></i>
+                        <span>${sol.upvotes}</span>
+                    </button>
+                `;
+                container.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        // --- Upvote Solution ---
+        function upvoteSolution(solId) {
+            const problem = problemsData.find(p => p.id === currentOpenProblemId);
+            if (problem) {
+                const sol = problem.solutions.find(s => s.id === solId);
+                if (sol) {
+                    sol.upvotes++;
+                    renderSolutionsList(problem.solutions);
+                    showToast('Upvoted solution idea!');
+                }
+            }
+        }
+
+        // --- Event Listeners Setup ---
+        function setupEventListeners() {
+            // Search Input
+            searchInput.addEventListener('input', renderProblems);
+
+            // Category Filter Buttons
+            categoryFilters.addEventListener('click', (e) => {
+                if (e.target.classList.contains('filter-cat-btn')) {
+                    document.querySelectorAll('.filter-cat-btn').forEach(b => {
+                        b.classList.remove('btn-brand');
+                        b.classList.add('btn-outline-secondary');
+                    });
+                    e.target.classList.remove('btn-outline-secondary');
+                    e.target.classList.add('btn-brand');
+                    activeCategory = e.target.getAttribute('data-category');
+                    renderProblems();
+                }
+            });
+
+            // Urgency & Sort Selects
+            urgencyFilter.addEventListener('change', (e) => {
+                activeUrgency = e.target.value;
+                renderProblems();
+            });
+
+            sortBySelect.addEventListener('change', (e) => {
+                activeSort = e.target.value;
+                renderProblems();
+            });
+
+            // Submit New Problem Form
+            document.getElementById('submitProblemForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const newProb = {
+                    id: Date.now(),
+                    title: document.getElementById('newTitle').value,
+                    category: document.getElementById('newCategory').value,
+                    urgency: document.getElementById('newUrgency').value,
+                    impact: Math.floor(Math.random() * 4) + 6, // Default randomized high impact 6-10
+                    feasibility: Math.floor(Math.random() * 5) + 5,
+                    description: document.getElementById('newDescription').value,
+                    audience: document.getElementById('newAudience').value,
+                    outcome: document.getElementById('newOutcome').value,
+                    upvotes: 1,
+                    solutions: []
+                };
+
+                problemsData.unshift(newProb);
+                renderProblems();
+                addProblemToMatrix(newProb);
+
+                bootstrap.Modal.getInstance(document.getElementById('submitProblemModal')).hide();
+                e.target.reset();
+                showToast('Problem successfully logged to community hub!');
+            });
+
+            // Pitch Solution Form
+            document.getElementById('pitchSolutionForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const text = document.getElementById('newSolutionText').value;
+                const interested = document.getElementById('buildingInterestCheck').checked;
+
+                const problem = problemsData.find(p => p.id === currentOpenProblemId);
+                if (problem) {
+                    problem.solutions.unshift({
+                        id: Date.now(),
+                        text: text,
+                        upvotes: 1,
+                        author: 'You',
+                        interestedToBuild: interested
+                    });
+                    renderSolutionsList(problem.solutions);
+                    renderProblems();
+                    document.getElementById('newSolutionText').value = '';
+                    document.getElementById('buildingInterestCheck').checked = false;
+                    showToast('Solution idea successfully pitched!');
+                }
+            });
+
+            // Matrix Plot Form
+            document.getElementById('matrixPlotForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const title = document.getElementById('plotTitle').value;
+                const impact = parseInt(document.getElementById('plotImpact').value);
+                const feasibility = parseInt(document.getElementById('plotFeasibility').value);
+
+                if (matrixChartInstance) {
+                    matrixChartInstance.data.datasets[0].data.push({
+                        x: feasibility,
+                        y: impact,
+                        label: title
+                    });
+                    matrixChartInstance.update();
+                    document.getElementById('matrixPlotForm').reset();
+                    showToast('Solution plotted onto Matrix!');
+                }
+            });
+        }
+
+        // --- Matrix Chart Initialization ---
+        function initMatrixChart() {
+            const ctx = document.getElementById('matrixChart').getContext('2d');
+            
+            const matrixPoints = problemsData.map(p => ({
+                x: p.feasibility,
+                y: p.impact,
+                label: p.title
+            }));
+
+            matrixChartInstance = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Real-Life Problems',
+                        data: matrixPoints,
+                        backgroundColor: '#0d9488',
+                        pointRadius: 8,
+                        pointHoverRadius: 11
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            min: 0,
+                            max: 10,
+                            title: { display: true, text: 'Feasibility / Ease of Solution (1-10)', font: { size: 12, weight: 'bold' } },
+                            grid: { color: 'rgba(0,0,0,0.08)' }
+                        },
+                        y: {
+                            min: 0,
+                            max: 10,
+                            title: { display: true, text: 'Impact Level (1-10)', font: { size: 12, weight: 'bold' } },
+                            grid: { color: 'rgba(0,0,0,0.08)' }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(ctx) {
+                                    const raw = ctx.raw;
+                                    return `${raw.label || 'Point'}: (Feasibility: ${raw.x}, Impact: ${raw.y})`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function addProblemToMatrix(prob) {
+            if (matrixChartInstance) {
+                matrixChartInstance.data.datasets[0].data.push({
+                    x: prob.feasibility,
+                    y: prob.impact,
+                    label: prob.title
+                });
+                matrixChartInstance.update();
+            }
+        }
+
+        // --- Copy Framework Templates ---
+        function copyTemplate(type) {
+            let text = "";
+            if (type === '5whys') {
+                text = "5-WHYS ROOT CAUSE TEMPLATE:\n1. Problem Statement: [Describe]\n2. Why does this occur?: [Reason 1]\n3. Why 1?: [Reason 2]\n4. Why 2?: [Reason 3]\n5. Root Cause: [Fundamental issue]";
+            } else if (type === 'fishbone') {
+                text = "ISHIKAWA FISHBONE CATEGORIES:\n- People Factors:\n- Process Barriers:\n- Technical Limits:\n- Environmental Constraints:";
+            } else if (type === 'mvp') {
+                text = "MVP HYPOTHESIS:\nWe believe that [Target Demographic] experiences pain with [Problem]. If we build [Minimal Solution Feature], they will [Expected Action/Metric].";
+            }
+            
+            document.execCommand('copy');
+            showToast('Template copied to clipboard!');
+        }
+
+        // --- UI Utilities ---
+        function showToast(msg) {
+            document.getElementById('toastMessage').innerText = msg;
+            const toastEl = document.getElementById('appToast');
+            const toast = new bootstrap.Toast(toastEl);
+            toast.show();
+        }
+
+        function updateStatsCounters() {
+            document.getElementById('statProblems').innerText = problemsData.length;
+            const totalSols = problemsData.reduce((acc, p) => acc + p.solutions.length, 0);
+            document.getElementById('statSolutions').innerText = totalSols;
+        }
+    </script>
+</body>
+</html>
