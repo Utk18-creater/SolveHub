@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RealLife Problems & Community Solutions Hub</title>
+    <title>Real Life Problem Solver & Community Solutions Hub</title>
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,7 +11,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Chart.js for Impact vs Feasibility Matrix -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
@@ -20,188 +20,91 @@
             --brand-primary: #0d9488;
             --brand-primary-hover: #0f766e;
             --brand-accent: #6366f1;
-            --brand-dark: #0f172a;
-            --bg-light: #f8fafc;
-            --card-bg-light: #ffffff;
-            --text-main: #1e293b;
+            --card-bg: #ffffff;
             --border-color: #e2e8f0;
+            --body-bg: #f8fafc;
+            --text-main: #0f172a;
         }
 
-        [data-theme="dark"] {
-            --bs-body-bg: #0f172a;
-            --bs-body-color: #f1f5f9;
-            --card-bg-light: #1e293b;
-            --text-main: #f8fafc;
+        [data-bs-theme="dark"] {
+            --brand-primary: #14b8a6;
+            --brand-primary-hover: #0d9488;
+            --brand-accent: #818cf8;
+            --card-bg: #1e293b;
             --border-color: #334155;
-            --bg-light: #020617;
+            --body-bg: #0f172a;
+            --text-main: #f8fafc;
         }
- body {
+
+        body {
             font-family: var(--bs-font-sans-serif);
-            background-color: var(--bs-body-bg);
+            background-color: var(--body-bg);
             color: var(--text-main);
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        h1, h2, h3, h4, h5, .font-heading {
+        h1, h2, h3, h4, h5, h6, .font-heading {
             font-family: 'Outfit', sans-serif;
         }
 
-        /* Modern Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(148, 163, 184, 0.5);
-            border-radius: 9999px;
-        }
- /* Glassmorphism Navbar */
         .navbar-custom {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border-color);
-            transition: all 0.3s ease;
         }
-        [data-theme="dark"] .navbar-custom {
+        [data-bs-theme="dark"] .navbar-custom {
             background: rgba(15, 23, 42, 0.85);
         }
 
-        /* Hero Section Styling */
-        .hero-section {
-            background: linear-gradient(135deg, rgba(13, 148, 136, 0.08) 0%, rgba(99, 102, 241, 0.08) 100%);
-            border-bottom: 1px solid var(--border-color);
-            position: relative;
-            overflow: hidden;
-        }
-  .hero-badge {
-            background: rgba(13, 148, 136, 0.1);
-            color: var(--brand-primary);
-            border: 1px solid rgba(13, 148, 136, 0.2);
-            font-weight: 600;
-            font-size: 0.85rem;
-            padding: 0.35rem 0.85rem;
-            border-radius: 50rem;
-        }
-        /* Stat Cards */
-        .stat-card {
-            background: var(--card-bg-light);
+        .problem-card {
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 1rem;
-            padding: 1.25rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
-        }
- /* Problem Cards */
-        .problem-card {
-            background: var(--card-bg-light);
-            border: 1px solid var(--border-color);
-            border-radius: 1.25rem;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             height: 100%;
             display: flex;
-            flex-direction: column;
+            flex-direction: flex-column;
             justify-content: space-between;
         }
+
         .problem-card:hover {
-            transform: translateY(-4px);
+            transform: translateY(-3px);
             border-color: var(--brand-primary);
-            box-shadow: 0 12px 24px -6px rgba(13, 148, 136, 0.15);
-        }
-         /* Custom Badges */
-        .badge-category {
-            background-color: rgba(99, 102, 241, 0.1);
-            color: #6366f1;
-            font-weight: 600;
-            padding: 0.35em 0.7em;
-            border-radius: 0.5rem;
-        }
-        .badge-urgency-high {
-            background-color: rgba(239, 68, 68, 0.1);
-            color: #ef4444;
-        }
-        .badge-urgency-medium {
-            background-color: rgba(245, 158, 11, 0.1);
-            color: #f59e0b;
-        }
-         .badge-urgency-low {
-            background-color: rgba(34, 197, 94, 0.1);
-            color: #22c55e;
+            box-shadow: 0 10px 20px -5px rgba(13, 148, 136, 0.15);
         }
 
-        /* Action Buttons */
         .btn-brand {
             background-color: var(--brand-primary);
             color: #ffffff;
             border-radius: 0.75rem;
             font-weight: 600;
-            padding: 0.6rem 1.25rem;
             border: none;
             transition: all 0.2s ease;
         }
-           .btn-brand:hover {
+        .btn-brand:hover {
             background-color: var(--brand-primary-hover);
             color: #ffffff;
-            box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
         }
 
-        .btn-outline-brand {
-            border: 1.5px solid var(--brand-primary);
-            color: var(--brand-primary);
-            border-radius: 0.75rem;
+        .badge-category {
+            background-color: rgba(99, 102, 241, 0.12);
+            color: var(--brand-accent);
             font-weight: 600;
-            background: transparent;
-            transition: all 0.2s ease;
-        }
-        .btn-outline-brand:hover {
-            background-color: var(--brand-primary);
-            color: #ffffff;
+            padding: 0.35em 0.7em;
+            border-radius: 0.5rem;
         }
 
-        /* Matrix Chart Wrapper */
-        .chart-container {
-            position: relative;
-            width: 100%;
-            height: 380px;
-            background: var(--card-bg-light);
-            border-radius: 1.25rem;
-            border: 1px solid var(--border-color);
-            padding: 1.25rem;
-        }
-
-        /* Modal Enhancements */
-        .modal-content {
-            background-color: var(--card-bg-light);
-            border: 1px solid var(--border-color);
-            border-radius: 1.5rem;
-            color: var(--text-main);
-        }
-  /* Solution Items */
-        .solution-item {
-            background: rgba(241, 245, 249, 0.5);
-            border: 1px solid var(--border-color);
-            border-radius: 1rem;
-            padding: 1rem;
-            transition: background-color 0.2s ease;
-        }
-        [data-theme="dark"] .solution-item {
-            background: rgba(30, 41, 59, 0.6);
-        }
+        .badge-severity-high { background-color: rgba(239, 68, 68, 0.12); color: #ef4444; }
+        .badge-severity-medium { background-color: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+        .badge-severity-low { background-color: rgba(34, 197, 94, 0.12); color: #22c55e; }
 
         .upvote-btn {
             border: 1px solid var(--border-color);
-            background: var(--card-bg-light);
+            background: var(--card-bg);
             color: var(--text-main);
             border-radius: 0.6rem;
-            padding: 0.3rem 0.6rem;
+            padding: 0.35rem 0.75rem;
             font-weight: 600;
-            font-size: 0.85rem;
             cursor: pointer;
             transition: all 0.2s ease;
         }
@@ -211,116 +114,107 @@
             border-color: var(--brand-primary);
         }
 
-        .toast-container {
-            z-index: 1090;
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            background: var(--card-bg);
+            border-radius: 1.25rem;
+            border: 1px solid var(--border-color);
+            padding: 1.25rem;
+        }
+
+        .solution-item {
+            background: rgba(241, 245, 249, 0.5);
+            border: 1px solid var(--border-color);
+            border-radius: 0.85rem;
+            padding: 0.85rem;
+        }
+        [data-bs-theme="dark"] .solution-item {
+            background: rgba(30, 41, 59, 0.6);
         }
     </style>
 </head>
 <body>
 
-    <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg sticky-top navbar-custom">
         <div class="container-fluid max-w-7xl px-lg-4">
-            <!-- Brand Logo -->
-            <a class="navbar-brand d-flex items-center gap-2 font-heading fw-bold text-decoration-none" href="#">
-                <div class="bg-teal-600 text-white rounded-3 p-2 d-inline-flex align-items-center justify-content-center" style="background-color: var(--brand-primary);">
+            <a class="navbar-brand d-flex align-items-center gap-2 font-heading fw-bold" href="#">
+                <div class="bg-teal text-white rounded-3 p-2 d-inline-flex align-items-center justify-content-center" style="background-color: var(--brand-primary);">
                     <i data-lucide="lightbulb" class="w-5 h-5"></i>
                 </div>
-                <span class="fs-4 tracking-tight" style="color: var(--text-main);">Solve<span style="color: var(--brand-primary);">Hub</span></span>
+                <span class="fs-4">Solve<span style="color: var(--brand-primary);">Hub</span></span>
             </a>
-              <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                 <i data-lucide="menu"></i>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-lg-1">
-                    <li class="nav-item">
-                        <a class="nav-link fw-medium px-3 active" href="#explore">Browse Problems</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-medium px-3" href="#matrix">Impact Matrix</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-medium px-3" href="#crowdsourced">Crowdsourced Ideas</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-medium px-3" href="#resources">Resources & Toolkit</a>
-                    </li>
+                    <li class="nav-item"><a class="nav-link fw-medium px-3 active" href="#explore">Browse Issues</a></li>
+                    <li class="nav-item"><a class="nav-link fw-medium px-3" href="#matrix">Impact Matrix</a></li>
                 </ul>
-                 <!-- Right Nav Elements -->
-                <div class="d-flex align-items-center gap-3">
+
+                <div class="d-flex align-items-center gap-2">
                     <button id="themeToggle" class="btn btn-link text-decoration-none p-2 rounded-circle" title="Toggle Theme" style="color: var(--text-main);">
                         <i data-lucide="moon" id="themeIcon"></i>
                     </button>
 
-                    <button class="btn btn-brand d-flex align-items-center gap-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#submitProblemModal">
-                        <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                        <span>Submit Problem</span>
-                    </button>
+                    <!-- Auth State Controls -->
+                    <div id="authLoggedOut" class="d-flex gap-2">
+                        <button class="btn btn-outline-secondary btn-sm rounded-3" data-bs-toggle="modal" data-bs-target="#authModal" onclick="setAuthMode('login')">Sign In</button>
+                        <button class="btn btn-brand btn-sm rounded-3" data-bs-toggle="modal" data-bs-target="#authModal" onclick="setAuthMode('signup')">Sign Up</button>
+                    </div>
+
+                    <div id="authLoggedIn" class="d-none align-items-center gap-2">
+                        <div class="d-flex align-items-center gap-2 px-2 py-1 rounded-3 bg-body-tertiary border">
+                            <i data-lucide="user" class="w-4 h-4 text-teal"></i>
+                            <span id="userNameDisplay" class="small fw-semibold">User</span>
+                        </div>
+                        <button class="btn btn-brand btn-sm d-flex align-items-center gap-1" data-bs-toggle="modal" data-bs-target="#submitProblemModal">
+                            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                            <span>Post Problem</span>
+                        </button>
+                        <button id="logoutBtn" class="btn btn-outline-danger btn-sm rounded-3" title="Log Out">
+                            <i data-lucide="log-out" class="w-4 h-4"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </nav>
-     <section class="hero-section py-5 py-lg-6">
+
+    <section class="py-5" style="background: linear-gradient(135deg, rgba(13, 148, 136, 0.08) 0%, rgba(99, 102, 241, 0.08) 100%);">
         <div class="container max-w-7xl px-lg-4">
-            <div class="row align-items-center gy-5">
+            <div class="row align-items-center gy-4">
                 <div class="col-lg-7">
-                    <div class="d-inline-flex align-items-center gap-2 hero-badge mb-3">
-                        <i data-lucide="sparkles" class="w-4 h-4"></i>
-                        <span>Empowering Grassroots Innovation</span>
-                    </div>
-                    <h1 class="display-4 fw-extrabold text-slate-900 mb-3 leading-tight" style="color: var(--text-main);">
-                        Solving Everyday Real-World Problems Together.
-                    </h1>
-                    <p class="lead text-muted mb-4 pe-lg-4" style="max-width: 620px;">
-                        An open platform where citizens, students, and creators log daily friction points, analyze root causes, and collaborate on actionable, high-impact solutions.
-                    </p>
-                    <div class="d-flex flex-wrap align-items-center gap-3">
-                        <a href="#explore" class="btn btn-brand btn-lg d-flex align-items-center gap-2">
-                            <span>Explore Problems</span>
-                            <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </a>
-                        <button class="btn btn-outline-brand btn-lg" data-bs-toggle="modal" data-bs-target="#submitProblemModal">
-                            Submit a Challenge
+                    <span class="badge bg-teal-100 text-teal-800 fw-bold px-3 py-2 rounded-pill mb-3">Community Persistence Engine</span>
+                    <h1 class="display-4 fw-extrabold mb-3">Crowdsourcing Solutions for Everyday Friction Points</h1>
+                    <p class="lead text-muted mb-4">Log urban, environmental, and productivity problems. Upvote high-impact issues and pitch solutions in real time.</p>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn btn-brand btn-lg d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#submitProblemModal">
+                            <i data-lucide="plus-circle"></i>
+                            <span>Log a Real Life Issue</span>
+                        </button>
+                        <button id="seedDataBtn" class="btn btn-outline-secondary btn-lg d-flex align-items-center gap-2">
+                            <i data-lucide="database"></i>
+                            <span>Seed Sample Data</span>
                         </button>
                     </div>
                 </div>
-                 <div class="col-lg-5">
+                <div class="col-lg-5">
                     <div class="row g-3">
                         <div class="col-6">
-                            <div class="stat-card">
-                                <div class="d-flex align-items-center gap-2 text-muted mb-2">
-                                    <i data-lucide="file-text" class="w-4 h-4 text-teal"></i>
-                                    <span class="small font-medium">Problems Logged</span>
-                                </div>
-                                <h3 class="fw-bold mb-0" id="statProblems">142</h3>
+                            <div class="p-3 bg-body rounded-4 border shadow-sm">
+                                <span class="text-muted small">Live Issues</span>
+                                <h3 class="fw-bold mb-0" id="statIssues">0</h3>
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="stat-card">
-                                <div class="d-flex align-items-center gap-2 text-muted mb-2">
-                                    <i data-lucide="cpu" class="w-4 h-4 text-indigo"></i>
-                                    <span class="small font-medium">Solutions Pitched</span>
-                                </div>
-                                <h3 class="fw-bold mb-0" id="statSolutions">389</h3>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="stat-card">
-                                <div class="d-flex align-items-center gap-2 text-muted mb-2">
-                                    <i data-lucide="users" class="w-4 h-4 text-emerald"></i>
-                                    <span class="small font-medium">Active Contributors</span>
-                                </div>
-                                <h3 class="fw-bold mb-0" id="statContributors">1,250</h3>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="stat-card">
-                                <div class="d-flex align-items-center gap-2 text-muted mb-2">
-                                    <i data-lucide="heart" class="w-4 h-4 text-rose"></i>
-                                    <span class="small font-medium">Lives Impacted</span>
-                                </div>
-                                <h3 class="fw-bold mb-0" id="statLives">15.4k</h3>
+                            <div class="p-3 bg-body rounded-4 border shadow-sm">
+                                <span class="text-muted small">Total Upvotes</span>
+                                <h3 class="fw-bold mb-0" id="statVotes">0</h3>
                             </div>
                         </div>
                     </div>
@@ -329,241 +223,125 @@
         </div>
     </section>
 
-    <!-- Problem Explorer Section -->
     <section id="explore" class="py-5">
         <div class="container max-w-7xl px-lg-4">
-            
-            <div class="d-flex flex-column flex-md-row md:align-items-center justify-content-between gap-3 mb-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
                 <div>
-                    <h2 class="fw-bold fs-2 mb-1">Interactive Problem Explorer</h2>
-                    <p class="text-muted small mb-0">Discover pressing daily challenges crowdsourced from around the world.</p>
+                    <h2 class="fw-bold mb-1">Explore Community Problems</h2>
+                    <p class="text-muted small mb-0">Synced live with Firestore database</p>
                 </div>
-                
-                <!-- Search Box -->
                 <div class="position-relative" style="min-width: 280px;">
                     <i data-lucide="search" class="position-absolute top-50 start-0 translate-middle-y ms-3 text-muted w-4 h-4"></i>
-                    <input type="text" id="searchInput" class="form-control ps-5 py-2 rounded-3" placeholder="Search keywords, tags, or causes...">
+                    <input type="text" id="searchInput" class="form-control ps-5 rounded-3" placeholder="Search keywords or location...">
                 </div>
             </div>
-             <!-- Filter Toolbar -->
-            <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 p-3 rounded-4 mb-4" style="background: var(--card-bg-light); border: 1px solid var(--border-color);">
-                <!-- Categories -->
-                <div class="d-flex flex-wrap gap-1.5" id="categoryFilters">
-                    <button class="btn btn-sm btn-brand filter-cat-btn" data-category="All">All Categories</button>
-                    <button class="btn btn-sm btn-outline-secondary filter-cat-btn" data-category="Urban Mobility">Urban Mobility</button>
-                    <button class="btn btn-sm btn-outline-secondary filter-cat-btn" data-category="Environment & Sustainability">Environment</button>
-                    <button class="btn btn-sm btn-outline-secondary filter-cat-btn" data-category="Daily Productivity">Productivity</button>
-                    <button class="btn btn-sm btn-outline-secondary filter-cat-btn" data-category="Health & Wellness">Health</button>
-                    <button class="btn btn-sm btn-outline-secondary filter-cat-btn" data-category="Education & Learning">Education</button>
-                </div>
-                <div class="d-flex align-items-center gap-2">
-                    <select id="urgencyFilter" class="form-select form-select-sm rounded-3">
-                        <option value="All">All Urgencies</option>
-                        <option value="High">High Urgency</option>
-                        <option value="Medium">Medium Urgency</option>
-                        <option value="Low">Low Urgency</option>
-                    </select>
 
-                    <select id="sortBySelect" class="form-select form-select-sm rounded-3">
-                        <option value="upvotes">Most Upvoted</option>
-                        <option value="impact">Highest Impact</option>
-                        <option value="newest">Newest First</option>
+            <!-- Filter Controls -->
+            <div class="p-3 rounded-4 bg-body border mb-4 d-flex flex-wrap align-items-center justify-content-between gap-3">
+                <div class="d-flex flex-wrap gap-2" id="categoryFilters">
+                    <button class="btn btn-sm btn-brand filter-cat" data-cat="All">All Categories</button>
+                    <button class="btn btn-sm btn-outline-secondary filter-cat" data-cat="Urban Infrastructure">Urban</button>
+                    <button class="btn btn-sm btn-outline-secondary filter-cat" data-cat="Environment">Environment</button>
+                    <button class="btn btn-sm btn-outline-secondary filter-cat" data-cat="Healthcare">Healthcare</button>
+                    <button class="btn btn-sm btn-outline-secondary filter-cat" data-cat="Work & Finance">Work</button>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <select id="severityFilter" class="form-select form-select-sm rounded-3">
+                        <option value="All">All Severity</option>
+                        <option value="High">High</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Low">Low</option>
                     </select>
                 </div>
             </div>
-             <!-- Dynamic Problem Cards Grid -->
-            <div class="row g-4" id="problemsGrid">
-                <!-- Javascript populated cards will render here -->
-            </div>
 
-            <!-- Empty State Placeholder -->
-            <div id="emptyState" class="text-center py-5 d-none">
-                <i data-lucide="inbox" class="w-12 h-12 text-muted mb-3"></i>
-                <h5 class="fw-bold">No matching problems found</h5>
-                <p class="text-muted small">Try tweaking your search keywords or category filters.</p>
+            <!-- Dynamic Grid -->
+            <div class="row g-4" id="problemsContainer">
+                <!-- Javascript will populate cards -->
             </div>
         </div>
     </section>
 
-    <!-- Impact vs. Feasibility Matrix Tool Section -->
-    <section id="matrix" class="py-5" style="background: var(--bg-light); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+    <section id="matrix" class="py-5 border-top bg-body-tertiary">
         <div class="container max-w-7xl px-lg-4">
-            <div class="row align-items-center gy-4 mb-4">
-                <div class="col-lg-7">
-                    <span class="badge bg-indigo-100 text-indigo-700 mb-2 px-3 py-2 rounded-pill font-semibold">Strategic Decision Tool</span>
-                    <h2 class="fw-bold fs-2 mb-2">Impact vs. Feasibility Matrix</h2>
-                    <p class="text-muted mb-0">Prioritize solutions by evaluating potential social/practical impact against technical and economic feasibility. Aim for top-right <strong>Quick Wins</strong>!</p>
-                </div>
-                <div class="col-lg-5 text-lg-end">
-                    <button class="btn btn-outline-brand btn-sm" id="resetMatrixZoom">Reset Matrix View</button>
-                </div>
-            </div>
-
-            <div class="row g-4">
-                <div class="col-lg-8">
-                    <div class="chart-container shadow-sm">
-                        <canvas id="matrixChart"></canvas>
-                    </div>
-                </div>
-
-                <!-- Interactive Matrix Plotter Form -->
-                <div class="col-lg-4">
-                    <div class="card border-0 shadow-sm rounded-4 h-100 p-4" style="background: var(--card-bg-light); border: 1px solid var(--border-color) !important;">
-                        <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
-                            <i data-lucide="target" class="text-teal-600"></i>
-                            <span>Plot Solution Idea</span>
-                        </h5>
-                        <form id="matrixPlotForm" class="d-flex flex-column gap-3">
-                            <div>
-                                <label class="form-label small font-semibold">Solution Title</label>
-                                <input type="text" id="plotTitle" class="form-control rounded-3" placeholder="e.g. Community Composting Locker" required>
-                            </div>
-                            <div class="row g-2">
-                                <div class="col-6">
-                                    <label class="form-label small font-semibold">Impact (1-10)</label>
-                                    <input type="number" id="plotImpact" min="1" max="10" class="form-control rounded-3" value="8" required>
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label small font-semibold">Feasibility (1-10)</label>
-                                    <input type="number" id="plotFeasibility" min="1" max="10" 
-                                    class="form-control rounded-3" value="7" required>
-                                </div>
-                            </div>
-      <button type="submit" class="btn btn-brand w-100 mt-2">
-                                Add to Matrix Visualizer
-                            </button>
-                        </form>
-
-                        <hr class="my-4" style="border-color: var(--border-color);">
-
-                        <div class="small">
-                            <span class="font-bold d-block mb-2 text-muted uppercase tracking-wider text-xs">Quadrant Key:</span>
-                            <ul class="list-unstyled d-flex flex-column gap-1.5 mb-0 text-xs">
-                                <li class="d-flex align-items-center gap-2">
-                                    <span class="rounded-circle bg-emerald-500 d-inline-block" style="width: 10px; height: 10px; background-color: #10b981;"></span>
-                                    <span><strong>Top Right:</strong> Quick Wins (High Impact & Feasible)</span>
-                                </li>
-                                <li class="d-flex align-items-center gap-2">
-                                    <span class="rounded-circle bg-indigo-500 d-inline-block" style="width: 10px; height: 10px; background-color: #6366f1;"></span>
-                                    <span><strong>Top Left:</strong> Major Strategic Initiatives</span>
-                                </li>
-                                <li class="d-flex align-items-center gap-2">
-                                    <span class="rounded-circle bg-amber-500 d-inline-block" style="width: 10px; height: 10px; background-color: #f59e0b;"></span>
-                                    <span><strong>Bottom Right:</strong> Fill-In Tasks / Minor Fixes</span>
-                                </li>
-                                              </ul>
-                        </div>
-                    </div>
-                </div>
+            <h2 class="fw-bold mb-2">Impact vs. Severity Distribution</h2>
+            <p class="text-muted mb-4">Interactive Scatter Plot generated from live community problem votes and severity rankings.</p>
+            <div class="chart-container shadow-sm">
+                <canvas id="matrixChart"></canvas>
             </div>
         </div>
     </section>
 
-    <!-- Resources & Frameworks Section -->
-    <section id="resources" class="py-5">
-        <div class="container max-w-7xl px-lg-4">
-            <div class="text-center max-w-2xl mx-auto mb-5">
-                <span class="badge bg-teal-100 text-teal-800 px-3 py-2 rounded-pill font-semibold mb-2">Problem Solving Toolkit</span>
-                <h2 class="fw-bold fs-2">Framing & Root Cause Analysis</h2>
-                <p class="text-muted">A structured problem definition prevents building perfect solutions for the wrong questions.</p>
-            </div>
-
-            <div class="row g-4">
-                <!-- Tool 1: 5-Whys Framework -->
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4" style="background: var(--card-bg-light); border: 1px solid var(--border-color) !important;">
-                        <div class="rounded-3 p-2 bg-teal-50 text-teal-600 d-inline-flex align-items-center justify-center mb-3" style="width: 42px; height: 42px;">
-                            <i data-lucide="help-circle"></i>
-                        </div>
-                        <h5 class="fw-bold mb-2">The 5-Whys Method</h5>
-                        <p class="text-muted small mb-3">Iteratively drill down from surface symptoms to uncover fundamental operational or mechanical root causes.</p>
-                        <div class="p-3 rounded-3 bg-slate-100 text-slate-800 text-xs font-mono mb-3" style="background: rgba(0,0,0,0.03);">
-                            Symptom → Why? → Why? → Why? → Why? → Root Cause
-                        </div>
-                        <button class="btn btn-sm btn-outline-brand mt-auto text-start" onclick="copyTemplate('5whys')">Copy 5-Whys Template</button>
-                    </div>
+    <!-- Authentication Modal -->
+    <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-4 p-2">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold" id="authModalTitle">Sign In</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                       <!-- Tool 2: Root Cause Canvas -->
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4" style="background: var(--card-bg-light); border: 1px solid var(--border-color) !important;">
-                        <div class="rounded-3 p-2 bg-indigo-50 text-indigo-600 d-inline-flex align-items-center justify-center mb-3" style="width: 42px; height: 42px;">
-                            <i data-lucide="git-fork"></i>
+                <div class="modal-body">
+                    <form id="authForm" class="d-flex flex-column gap-3">
+                        <div id="displayNameGroup" class="d-none">
+                            <label class="form-label small fw-semibold">Display Name</label>
+                            <input type="text" id="authDisplayName" class="form-control rounded-3" placeholder="Jane Doe">
                         </div>
-                        <h5 class="fw-bold mb-2">Ishikawa Fishbone Guide</h5>
-                        <p class="text-muted small mb-3">Categorize contributors into People, Process, Environment, and Technology factors before designing tech.</p>
-                        <div class="p-3 rounded-3 bg-slate-100 text-slate-800 text-xs font-mono mb-3" style="background: rgba(0,0,0,0.03);">
-                            [People | Process | Tech | Environment] → Effect
+                        <div>
+                            <label class="form-label small fw-semibold">Email Address</label>
+                            <input type="email" id="authEmail" class="form-control rounded-3" placeholder="name@example.com" required>
                         </div>
-                        <button class="btn btn-sm btn-outline-brand mt-auto text-start" onclick="copyTemplate('fishbone')">Copy Fishbone Canvas</button>
-                    </div>
-                </div>
-
-                <!-- Tool 3: Rapid Prototyping -->
-                <div class="col-md-4">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 p-4" style="background: var(--card-bg-light); border: 1px solid var(--border-color) !important;">
-                        <div class="rounded-3 p-2 bg-amber-50 text-amber-600 d-inline-flex align-items-center justify-center mb-3" style="width: 42px; height: 42px;">
-                            <i data-lucide="rocket"></i>
+                        <div>
+                            <label class="form-label small fw-semibold">Password</label>
+                            <input type="password" id="authPassword" class="form-control rounded-3" placeholder="••••••••" required>
                         </div>
-                        <h5 class="fw-bold mb-2">MVP Hypothesis Test</h5>
-                        <p class="text-muted small mb-3">Define the smallest testable prototype hypothesis to validate user adoption with minimal engineering effort.</p>
-                        <div class="p-3 rounded-3 bg-slate-100 text-slate-800 text-xs font-mono mb-3" style="background: rgba(0,0,0,0.03);">
-                            We believe [Target] will [Action] if we build [Feature].
-                        </div>
-                        <button class="btn btn-sm btn-outline-brand mt-auto text-start" onclick="copyTemplate('mvp')">Copy MVP Formula</button>
-                    </div>
+                        <button type="submit" class="btn btn-brand w-100 py-2 mt-2" id="authSubmitBtn">Sign In</button>
+                    </form>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
 
     <!-- Submit Problem Modal -->
     <div class="modal fade" id="submitProblemModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content p-2">
-                <div class="modal-header border-0 pb-0">
-                    <div>
-                        <h4 class="modal-title fw-bold">Submit a Real Life Challenge</h4>
-                        <p class="text-muted small mb-0">Describe a daily friction point to crowdsource solutions from developers and innovators.</p>
-                    </div>
+            <div class="modal-content rounded-4 p-2">
+                <div class="modal-header border-0">
+                    <h4 class="modal-title fw-bold">Submit a Real Life Problem</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="submitProblemForm" class="row g-3">
                         <div class="col-12">
-                            <label class="form-label font-semibold small">Problem Title *</label>
-                            <input type="text" id="newTitle" class="form-control rounded-3" placeholder="e.g. Bus Stop Overcrowding during Rain Storms" required>
+                            <label class="form-label small fw-semibold">Problem Title *</label>
+                            <input type="text" id="probTitle" class="form-control rounded-3" placeholder="e.g. Broken Bus Schedule Display at Central Hub" required>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label font-semibold small">Category *</label>
-                            <select id="newCategory" class="form-select rounded-3" required>
-                                <option value="Urban Mobility">Urban Mobility</option>
-                                <option value="Environment & Sustainability">Environment & Sustainability</option>
-                                <option value="Daily Productivity">Daily Productivity</option>
-                                <option value="Health & Wellness">Health & Wellness</option>
-                                <option value="Education & Learning">Education & Learning</option>
+                            <label class="form-label small fw-semibold">Category *</label>
+                            <select id="probCategory" class="form-select rounded-3" required>
+                                <option value="Urban Infrastructure">Urban Infrastructure</option>
+                                <option value="Environment">Environment</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Work & Finance">Work & Finance</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label font-semibold small">Urgency Level *</label>
-                            <select id="newUrgency" class="form-select rounded-3" required>
-                                <option value="High">High (Immediate Pain Point)</option>
-                                <option value="Medium" selected>Medium (Recurring Nuisance)</option>
-                                <option value="Low">Low (Inconvenience)</option>
+                            <label class="form-label small fw-semibold">Severity *</label>
+                            <select id="probSeverity" class="form-select rounded-3" required>
+                                <option value="High">High (Urgent Pain Point)</option>
+                                <option value="Medium" selected>Medium (Frequent Nuisance)</option>
+                                <option value="Low">Low (Minor Inconvenience)</option>
                             </select>
                         </div>
                         <div class="col-12">
-                            <label class="form-label font-semibold small">Detailed Description & Root Cause *</label>
-                            <textarea id="newDescription" class="form-control rounded-3" rows="3" placeholder="Explain what happens, when it happens, and why existing solutions fail..." required></textarea>
+                            <label class="form-label small fw-semibold">Location / Context</label>
+                            <input type="text" id="probLocation" class="form-control rounded-3" placeholder="e.g. Downtown Metro Station or Remote Work">
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label font-semibold small">Target Audience / Who is Affected?</label>
-                            <input type="text" id="newAudience" class="form-control rounded-3" placeholder="e.g. Commuters, Elderly Residents, Remote Students">
+                        <div class="col-12">
+                            <label class="form-label small fw-semibold">Detailed Description *</label>
+                            <textarea id="probDesc" class="form-control rounded-3" rows="3" placeholder="Describe the friction point and current workarounds..." required></textarea>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label font-semibold small">Desired Outcome</label>
-                            <input type="text" id="newOutcome" class="form-control rounded-3" placeholder="e.g. Real-time passenger count visibility">
-                        </div>
-                        <div class="col-12 d-flex justify-content-end gap-2 pt-3 border-top mt-4">
+                        <div class="col-12 d-flex justify-content-end gap-2 pt-3">
                             <button type="button" class="btn btn-light rounded-3" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-brand rounded-3 px-4">Publish Problem</button>
                         </div>
@@ -573,602 +351,407 @@
         </div>
     </div>
 
-    <!-- Problem Details & Solutions Modal -->
-    <div class="modal fade" id="solutionDetailsModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content p-2">
-                <div class="modal-header border-0 pb-0">
-                    <div class="d-flex align-items-center gap-2">
-                        <span id="modalCategoryBadge" class="badge badge-category">Category</span>
-                        <span id="modalUrgencyBadge" class="badge">Urgency</span>
-                    </div>
+    <!-- Solution Pitches Modal -->
+    <div class="modal fade" id="solutionsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content rounded-4 p-2">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title fw-bold" id="solModalTitle">Solutions & Pitches</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row g-4">
-                        <!-- Left Column: Problem Overview -->
-                        <div class="col-lg-5 border-end pe-lg-4" style="border-color: var(--border-color) !important;">
-                            <h3 class="fw-bold mb-3" id="modalProblemTitle">Problem Title</h3>
-                            <p class="text-muted leading-relaxed mb-4" id="modalProblemDesc">Problem Description</p>
-                            
-                            <div class="p-3 rounded-3 bg-slate-100 dark:bg-slate-800 mb-3" style="background: rgba(0,0,0,0.03);">
-                                <span class="text-xs font-bold uppercase tracking-wider text-muted d-block mb-1">Target Demographic</span>
-                                <p class="small mb-0 font-medium" id="modalTargetAudience">General Population</p>
-                            </div>
-
-                            <div class="p-3 rounded-3 bg-slate-100 dark:bg-slate-800 mb-4" style="background: rgba(0,0,0,0.03);">
-                                <span class="text-xs font-bold uppercase tracking-wider text-muted d-block mb-1">Desired Impact / Outcome</span>
-                                <p class="small mb-0 font-medium" id="modalDesiredOutcome">Better daily workflow</p>
-                            </div>
-
-                            <button class="btn btn-outline-brand w-100 d-flex align-items-center justify-content-center gap-2" id="modalUpvoteBtn">
-                                <i data-lucide="thumbs-up" class="w-4 h-4"></i>
-                                <span>Upvote Problem (<span id="modalUpvoteCount">0</span>)</span>
-                            </button>
-                        </div>
-
-                        <!-- Right Column: Crowdsourced Solutions -->
-                        <div class="col-lg-7 ps-lg-4">
-                            <div class="d-flex align-items-center justify-between mb-3">
-                                <h5 class="fw-bold mb-0">Crowdsourced Proposed Solutions</h5>
-                                <span class="badge bg-slate-200 text-slate-800 rounded-pill" id="solutionCountBadge">0 Ideas</span>
-                            </div>
-
-                            <!-- Proposed Solutions List -->
-                            <div id="solutionsList" class="d-flex flex-column gap-3 mb-4 custom-scrollbar" style="max-height: 280px; overflow-y: auto;">
-                                <!-- Javascript will render solutions here -->
-                            </div>
-
-                            <!-- Pitch New Solution Form -->
-                            <form id="pitchSolutionForm" class="p-3 rounded-4 border" style="background: var(--bg-light); border-color: var(--border-color) !important;">
-                                <h6 class="fw-bold mb-2">Pitch Your Idea or Solution</h6>
-                                <div class="mb-2">
-                                    <textarea id="newSolutionText" class="form-control rounded-3 text-sm" rows="2" placeholder="Describe a technical, physical, or community-driven solution concept..." required></textarea>
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between gap-2">
-                                    <div class="form-check form-switch text-xs">
-                                        <input class="form-check-input" type="checkbox" id="buildingInterestCheck">
-                                        <label class="form-check-label text-muted" for="buildingInterestCheck">I want to help build this MVP</label>
-                                    </div>
-                                    <button type="submit" class="btn btn-brand btn-sm">Submit Solution</button>
-                                </div>
-                            </form>
-                        </div>
+                    <p class="text-muted small" id="solModalDesc"></p>
+                    <hr>
+                    <h6 class="fw-bold mb-3">Community Solutions</h6>
+                    <div id="solutionsList" class="d-flex flex-column gap-2 mb-4" style="max-height: 250px; overflow-y: auto;">
+                        <!-- Solutions rendered dynamically -->
                     </div>
+
+                    <form id="addSolutionForm" class="p-3 bg-body-tertiary rounded-3 border">
+                        <label class="form-label small fw-semibold">Pitch Your Solution Idea</label>
+                        <textarea id="solInputText" class="form-control rounded-3 mb-2" rows="2" placeholder="Propose an engineering, community, or digital solution..." required></textarea>
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-brand btn-sm">Submit Solution Idea</button>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer Section -->
-    <footer class="py-5 mt-5 border-top" style="background: var(--card-bg-light); border-color: var(--border-color) !important;">
-        <div class="container max-w-7xl px-lg-4">
-            <div class="row g-4 mb-4">
-                <div class="col-lg-4">
-                    <a class="d-flex items-center gap-2 font-heading fw-bold text-decoration-none mb-3" href="#">
-                        <div class="bg-teal-600 text-white rounded-3 p-1.5 d-inline-flex align-items-center justify-content-center" style="background-color: var(--brand-primary);">
-                            <i data-lucide="lightbulb" class="w-4 h-4"></i>
-                        </div>
-                        <span class="fs-5" style="color: var(--text-main);">Solve<span style="color: var(--brand-primary);">Hub</span></span>
-                    </a>
-                    <p class="text-muted small max-w-sm">An open ecosystem dedicated to turning everyday human annoyances and systemic municipal challenges into innovative products.</p>
-                </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, addDoc, updateDoc, onSnapshot, arrayUnion, arrayRemove, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-                <div class="col-6 col-lg-2">
-                    <h6 class="fw-bold mb-3 small uppercase tracking-wider text-muted">Platform</h6>
-                    <ul class="list-unstyled text-sm d-flex flex-column gap-2 mb-0">
-                        <li><a href="#explore" class="text-decoration-none text-muted">Explore Feed</a></li>
-                        <li><a href="#matrix" class="text-decoration-none text-muted">Impact Matrix</a></li>
-                        <li><a href="#resources" class="text-decoration-none text-muted">Hackathon Tools</a></li>
-                    </ul>
-                </div>
+        // Global App ID & Firebase Config Setup
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'reallife-solver-app';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' 
+            ? JSON.parse(__firebase_config) 
+            : { apiKey: "demo-api-key", authDomain: "demo.firebaseapp.com", projectId: "demo-project" };
 
-                <div class="col-6 col-lg-2">
-                    <h6 class="fw-bold mb-3 small uppercase tracking-wider text-muted">Community</h6>
-                    <ul class="list-unstyled text-sm d-flex flex-column gap-2 mb-0">
-                        <li><a href="#" class="text-decoration-none text-muted">Guidelines</a></li>
-                        <li><a href="#" class="text-decoration-none text-muted">Open Source API</a></li>
-                        <li><a href="#" class="text-decoration-none text-muted">Discord Server</a></li>
-                    </ul>
-                </div>
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-                <div class="col-lg-4">
-                    <h6 class="fw-bold mb-3 small uppercase tracking-wider text-muted">Weekly Problem Brief</h6>
-                    <p class="text-muted small mb-3">Get the top 3 unaddressed real-life problems delivered to your inbox every Monday.</p>
-                    <div class="input-group">
-                        <input type="email" class="form-control rounded-start-3" placeholder="developer@example.com">
-                        <button class="btn btn-brand rounded-end-3" type="button">Subscribe</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="d-flex flex-column flex-sm-row align-items-center justify-content-between pt-4 border-top text-xs text-muted" style="border-color: var(--border-color) !important;">
-                <p class="mb-0">&copy; 2026 RealLife Problems Hub. Built for open-source innovators.</p>
-                <div class="d-flex gap-3 mt-2 mt-sm-0">
-                    <a href="#" class="text-muted text-decoration-none">Privacy Policy</a>
-                    <a href="#" class="text-muted text-decoration-none">Terms of Service</a>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Toast Notification Container -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3">
-        <div id="appToast" class="toast align-items-center text-white bg-dark border-0 rounded-3 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body" id="toastMessage">
-                    Action executed successfully.
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap 5 JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- JavaScript Application Logic -->
-    <script>
-        // --- State Management ---
-        let problemsData = [
-            {
-                id: 1,
-                title: "Apartment Lobby Package Theft & Overcrowding",
-                category: "Urban Mobility",
-                urgency: "High",
-                impact: 8,
-                feasibility: 9,
-                description: "Multi-family buildings face overflowing delivery boxes in lobby hallways, causing fire hazards and high theft rates for non-doorman units.",
-                audience: "Urban apartment renters, delivery drivers",
-                outcome: "Secure, low-cost modular lobby lockers with temporary PIN access",
-                upvotes: 124,
-                bookmarked: false,
-                status: "In Development",
-                solutions: [
-                    { id: 101, text: "Open-source smart lock relay retrofitting unused basement closets into delivery lockers.", upvotes: 34, author: "DevMarcus", interestedToBuild: true },
-                    { id: 102, text: "QR code scanner camera app that logs package arrival times and notifies residents.", upvotes: 18, author: "Sarah_UX", interestedToBuild: false }
-                ]
-            },
-            {
-                id: 2,
-                title: "Single-Resident Produce Spoilage in Supermarkets",
-                category: "Environment & Sustainability",
-                urgency: "Medium",
-                impact: 9,
-                feasibility: 7,
-                description: "Groceries package fresh vegetables in family bulk sizes, causing solo living adults to waste up to 30% of perishable groceries weekly.",
-                audience: "Solo dwellers, students, elderly citizens",
-                outcome: "Modular micro-portion packaging or community ingredient swaps",
-                upvotes: 210,
-                bookmarked: true,
-                status: "Open",
-                solutions: [
-                    { id: 201, text: "Hyperlocal ingredient swap kiosk in apartment lobbies for trading unneeded produce.", upvotes: 42, author: "EcoHacker", interestedToBuild: true }
-                ]
-            },
-            {
-                id: 3,
-                title: "Fragmented Remote Notification Context Switching",
-                category: "Daily Productivity",
-                urgency: "High",
-                impact: 7,
-                feasibility: 8,
-                description: "Knowledge workers spend over 2 hours daily re-focusing due to scattered alerts across Slack, Email, Jira, and WhatsApp without priority hierarchy.",
-                audience: "Remote software engineers, freelancers, project leads",
-                outcome: "Unified urgent-only notification filter with AI priority synthesis",
-                upvotes: 185,
-                bookmarked: false,
-                status: "Open",
-                solutions: [
-                    { id: 301, text: "Local desktop menu bar app that aggregates Slack & Gmail and holds alerts until planned focus breaks.", upvotes: 56, author: "FocusNinja", interestedToBuild: true }
-                ]
-            },
-            {
-                id: 4,
-                title: "Prescription Medication Adherence for Seniors",
-                category: "Health & Wellness",
-                urgency: "High",
-                impact: 9,
-                feasibility: 6,
-                description: "Elderly living independently frequently mix up daily pill times due to hard-to-read tiny pill bottle labels.",
-                audience: "Seniors over 70, family caregivers",
-                outcome: "High-contrast tactile smart pill dispensers with audio reminders",
-                upvotes: 156,
-                bookmarked: false,
-                status: "Solved",
-                solutions: [
-                    { id: 401, text: "3D printable color-coded pill cap clicker with daily rotatable dials.", upvotes: 89, author: "HealthMaker", interestedToBuild: true }
-                ]
-            }
-        ];
-
+        // State Variables
+        let currentUser = null;
+        let problems = [];
+        let solutionsMap = {}; // problemId -> Array
         let activeCategory = 'All';
-        let activeUrgency = 'All';
-        let activeSort = 'upvotes';
-        let currentOpenProblemId = null;
-        let matrixChartInstance = null;
+        let activeSeverity = 'All';
+        let searchKeyword = '';
+        let currentProblemForSol = null;
+        let matrixChart = null;
 
-        // --- DOM Elements ---
-        const problemsGrid = document.getElementById('problemsGrid');
-        const emptyState = document.getElementById('emptyState');
-        const searchInput = document.getElementById('searchInput');
-        const categoryFilters = document.getElementById('categoryFilters');
-        const urgencyFilter = document.getElementById('urgencyFilter');
-        const sortBySelect = document.getElementById('sortBySelect');
-        const themeToggleBtn = document.getElementById('themeToggle');
-        const themeIcon = document.getElementById('themeIcon');
+        // Firestore Public Paths (RULE 1)
+        const problemsCol = collection(db, 'artifacts', appId, 'public', 'data', 'problems');
+        const solutionsCol = collection(db, 'artifacts', appId, 'public', 'data', 'solutions');
 
-        // --- Initialize Application ---
-        document.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('load', async () => {
             lucide.createIcons();
-            renderProblems();
-            initMatrixChart();
-            setupEventListeners();
-        });
+            initChart();
 
-        // --- Theme Management ---
-        themeToggleBtn.addEventListener('click', () => {
-            const currentTheme = document.body.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.body.setAttribute('data-theme', newTheme);
-            themeIcon.setAttribute('data-lucide', newTheme === 'dark' ? 'sun' : 'moon');
-            lucide.createIcons();
-            if (matrixChartInstance) {
-                matrixChartInstance.options.scales.x.grid.color = newTheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
-                matrixChartInstance.options.scales.y.grid.color = newTheme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.08)';
-                matrixChartInstance.update();
+            // Perform initial Auth Setup (RULE 3)
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.warn("Auth initial fallback error, signing in anonymously:", err);
+                await signInAnonymously(auth);
             }
-        });
 
-        // --- Render Problems Grid ---
-        function renderProblems() {
-            const searchTerm = searchInput.value.toLowerCase().trim();
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
+                const loggedInUI = document.getElementById('authLoggedIn');
+                const loggedOutUI = document.getElementById('authLoggedOut');
+                const nameDisplay = document.getElementById('userNameDisplay');
 
-            let filtered = problemsData.filter(p => {
-                const matchesCategory = activeCategory === 'All' || p.category === activeCategory;
-                const matchesUrgency = activeUrgency === 'All' || p.urgency === activeUrgency;
-                const matchesSearch = p.title.toLowerCase().includes(searchTerm) || 
-                                      p.description.toLowerCase().includes(searchTerm) ||
-                                      p.category.toLowerCase().includes(searchTerm);
-                return matchesCategory && matchesUrgency && matchesSearch;
+                if (user && !user.isAnonymous) {
+                    loggedInUI.classList.remove('d-none');
+                    loggedInUI.classList.add('d-flex');
+                    loggedOutUI.classList.add('d-none');
+                    const emailPrefix = user.email ? user.email.split('@')[0] : 'User';
+                    nameDisplay.innerText = user.displayName || emailPrefix;
+                } else {
+                    loggedInUI.classList.add('d-none');
+                    loggedOutUI.classList.remove('d-none');
+                    loggedOutUI.classList.add('d-flex');
+                }
             });
 
-            // Sorting Logic
-            filtered.sort((a, b) => {
-                if (activeSort === 'upvotes') return b.upvotes - a.upvotes;
-                if (activeSort === 'impact') return b.impact - a.impact;
-                if (activeSort === 'newest') return b.id - a.id;
-                return 0;
-            });
+            // Attach Real-time Firestore Listeners
+            setupRealtimeListeners();
+        });
 
-            problemsGrid.innerHTML = '';
-
-            if (filtered.length === 0) {
-                emptyState.classList.remove('d-none');
-            } else {
-                emptyState.classList.add('d-none');
-                filtered.forEach(problem => {
-                    const urgencyClass = problem.urgency === 'High' ? 'badge-urgency-high' :
-                                         problem.urgency === 'Medium' ? 'badge-urgency-medium' : 'badge-urgency-low';
-                    
-                    const cardCol = document.createElement('div');
-                    cardCol.className = 'col-md-6 col-lg-4';
-                    cardCol.innerHTML = `
-                        <div class="problem-card p-4">
-                            <div>
-                                <div class="d-flex align-items-center justify-content-between mb-3">
-                                    <span class="badge badge-category">${problem.category}</span>
-                                    <span class="badge ${urgencyClass}">${problem.urgency} Urgency</span>
-                                </div>
-
-                                <h5 class="fw-bold mb-2 text-truncate-2">${problem.title}</h5>
-                                <p class="text-muted small mb-4 line-clamp-3">${problem.description}</p>
-                            </div>
-
-                            <div>
-                                <div class="d-flex align-items-center justify-content-between pt-3 border-top mb-3" style="border-color: var(--border-color) !important;">
-                                    <div class="d-flex align-items-center gap-1 text-xs text-muted">
-                                        <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i>
-                                        <span>Impact: <strong>${problem.impact}/10</strong></span>
-                                    </div>
-                                    <div class="d-flex align-items-center gap-1 text-xs text-muted">
-                                        <i data-lucide="message-square" class="w-3.5 h-3.5 text-indigo-500"></i>
-                                        <span>${problem.solutions.length} Solutions</span>
-                                    </div>
-                                </div>
-
-                                <div class="d-flex align-items-center justify-content-between gap-2">
-                                    <button class="upvote-btn d-flex align-items-center gap-1" onclick="toggleUpvote(event, ${problem.id})">
-                                        <i data-lucide="thumbs-up" class="w-3.5 h-3.5"></i>
-                                        <span>${problem.upvotes}</span>
-                                    </button>
-
-                                    <button class="btn btn-outline-brand btn-sm d-flex align-items-center gap-1" onclick="openProblemDetails(${problem.id})">
-                                        <span>View & Pitch</span>
-                                        <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    problemsGrid.appendChild(cardCol);
-                });
-            }
-            lucide.createIcons();
-            updateStatsCounters();
-        }
-
-        // --- Upvote Function ---
-        function toggleUpvote(e, problemId) {
-            e.stopPropagation();
-            const problem = problemsData.find(p => p.id === problemId);
-            if (problem) {
-                problem.upvotes++;
+        function setupRealtimeListeners() {
+            // Listen for Problems
+            onSnapshot(problemsCol, (snapshot) => {
+                problems = snapshot.docs.map(docSnap => ({
+                    id: docSnap.id,
+                    ...docSnap.data()
+                }));
                 renderProblems();
-                showToast(`Upvoted "${problem.title.substring(0, 25)}..."`);
-            }
+                updateMatrixChart();
+                updateStats();
+            }, (error) => console.error("Problems Listener Error:", error));
+
+            // Listen for Solutions
+            onSnapshot(solutionsCol, (snapshot) => {
+                solutionsMap = {};
+                snapshot.docs.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (!solutionsMap[data.problemId]) solutionsMap[data.problemId] = [];
+                    solutionsMap[data.problemId].push({ id: docSnap.id, ...data });
+                });
+                renderProblems();
+            }, (error) => console.error("Solutions Listener Error:", error));
         }
 
-        // --- Open Problem Details Modal ---
-        function openProblemDetails(problemId) {
-            currentOpenProblemId = problemId;
-            const problem = problemsData.find(p => p.id === problemId);
-            if (!problem) return;
-
-            document.getElementById('modalProblemTitle').innerText = problem.title;
-            document.getElementById('modalProblemDesc').innerText = problem.description;
-            document.getElementById('modalCategoryBadge').innerText = problem.category;
-            document.getElementById('modalUrgencyBadge').innerText = `${problem.urgency} Urgency`;
-            document.getElementById('modalUrgencyBadge').className = `badge ${
-                problem.urgency === 'High' ? 'badge-urgency-high' :
-                problem.urgency === 'Medium' ? 'badge-urgency-medium' : 'badge-urgency-low'
-            }`;
-            document.getElementById('modalTargetAudience').innerText = problem.audience || 'General public';
-            document.getElementById('modalDesiredOutcome').innerText = problem.outcome || 'General workflow improvement';
-            document.getElementById('modalUpvoteCount').innerText = problem.upvotes;
-
-            renderSolutionsList(problem.solutions);
-
-            const modal = new bootstrap.Modal(document.getElementById('solutionDetailsModal'));
-            modal.show();
-        }
-
-        // --- Render Solutions in Modal ---
-        function renderSolutionsList(solutions) {
-            const container = document.getElementById('solutionsList');
-            document.getElementById('solutionCountBadge').innerText = `${solutions.length} Ideas`;
+        function renderProblems() {
+            const container = document.getElementById('problemsContainer');
             container.innerHTML = '';
 
-            if (solutions.length === 0) {
-                container.innerHTML = `<p class="text-muted small italic my-3 text-center">No solution pitches yet. Be the first to propose one below!</p>`;
+            const filtered = problems.filter(p => {
+                const matchCat = activeCategory === 'All' || p.category === activeCategory;
+                const matchSev = activeSeverity === 'All' || p.severity === activeSeverity;
+                const matchSearch = (p.title + ' ' + p.description + ' ' + (p.location || '')).toLowerCase().includes(searchKeyword.toLowerCase());
+                return matchCat && matchSev && matchSearch;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i data-lucide="inbox" class="w-12 h-12 text-muted mb-2"></i>
+                        <p class="text-muted">No problems found matching criteria.</p>
+                    </div>`;
+                lucide.createIcons();
                 return;
             }
 
-            solutions.forEach(sol => {
-                const div = document.createElement('div');
-                div.className = 'solution-item d-flex justify-content-between align-items-start gap-3';
-                div.innerHTML = `
-                    <div>
-                        <p class="small mb-1 font-medium">${sol.text}</p>
-                        <div class="d-flex align-items-center gap-2 text-xs text-muted">
-                            <span>Pitched by <strong>@${sol.author}</strong></span>
-                            ${sol.interestedToBuild ? '<span class="badge bg-emerald-100 text-emerald-700">Wants to Build</span>' : ''}
+            filtered.forEach(prob => {
+                const voterUids = prob.voterUids || [];
+                const isUpvoted = currentUser ? voterUids.includes(currentUser.uid) : false;
+                const probSols = solutionsMap[prob.id] || [];
+                const sevBadgeClass = prob.severity === 'High' ? 'badge-severity-high' : (prob.severity === 'Medium' ? 'badge-severity-medium' : 'badge-severity-low');
+
+                const col = document.createElement('div');
+                col.className = 'col-md-6 col-lg-4';
+                col.innerHTML = `
+                    <div class="problem-card p-4">
+                        <div>
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <span class="badge badge-category">${prob.category}</span>
+                                <span class="badge ${sevBadgeClass}">${prob.severity}</span>
+                            </div>
+                            <h5 class="fw-bold mb-2">${escapeHtml(prob.title)}</h5>
+                            <p class="text-muted small mb-3">${escapeHtml(prob.description)}</p>
+                            ${prob.location ? `<div class="small text-muted mb-3"><i data-lucide="map-pin" class="w-3.5 h-3.5 d-inline me-1"></i>${escapeHtml(prob.location)}</div>` : ''}
+                        </div>
+                        <div>
+                            <div class="d-flex align-items-center justify-content-between pt-3 border-top">
+                                <button class="upvote-btn ${isUpvoted ? 'active' : ''} d-flex align-items-center gap-1" onclick="toggleVote('${prob.id}')">
+                                    <i data-lucide="thumbs-up" class="w-4 h-4"></i>
+                                    <span>${voterUids.length}</span>
+                                </button>
+                                <button class="btn btn-outline-secondary btn-sm" onclick="openSolutionsModal('${prob.id}')">
+                                    <span>${probSols.length} Solutions</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
-                    <button class="upvote-btn btn-sm text-xs d-flex align-items-center gap-1" onclick="upvoteSolution(${sol.id})">
-                        <i data-lucide="arrow-big-up" class="w-3.5 h-3.5"></i>
-                        <span>${sol.upvotes}</span>
-                    </button>
                 `;
-                container.appendChild(div);
+                container.appendChild(col);
             });
             lucide.createIcons();
         }
 
-        // --- Upvote Solution ---
-        function upvoteSolution(solId) {
-            const problem = problemsData.find(p => p.id === currentOpenProblemId);
-            if (problem) {
-                const sol = problem.solutions.find(s => s.id === solId);
-                if (sol) {
-                    sol.upvotes++;
-                    renderSolutionsList(problem.solutions);
-                    showToast('Upvoted solution idea!');
+        window.toggleVote = async (probId) => {
+            if (!currentUser) return alert("Please sign in to vote.");
+            const probRef = doc(db, 'artifacts', appId, 'public', 'data', 'problems', probId);
+            const prob = problems.find(p => p.id === probId);
+            if (!prob) return;
+
+            const hasVoted = (prob.voterUids || []).includes(currentUser.uid);
+            try {
+                if (hasVoted) {
+                    await updateDoc(probRef, { voterUids: arrayRemove(currentUser.uid) });
+                } else {
+                    await updateDoc(probRef, { voterUids: arrayUnion(currentUser.uid) });
                 }
+            } catch (err) {
+                console.error("Upvote error:", err);
             }
+        };
+
+        window.openSolutionsModal = (probId) => {
+            currentProblemForSol = probId;
+            const prob = problems.find(p => p.id === probId);
+            if (!prob) return;
+
+            document.getElementById('solModalTitle').innerText = prob.title;
+            document.getElementById('solModalDesc').innerText = prob.description;
+
+            renderSolutionsModalList();
+            const modal = new bootstrap.Modal(document.getElementById('solutionsModal'));
+            modal.show();
+        };
+
+        function renderSolutionsModalList() {
+            const list = document.getElementById('solutionsList');
+            list.innerHTML = '';
+            const probSols = solutionsMap[currentProblemForSol] || [];
+
+            if (probSols.length === 0) {
+                list.innerHTML = `<p class="text-muted small">No solutions pitched yet. Be the first!</p>`;
+                return;
+            }
+
+            probSols.forEach(sol => {
+                const div = document.createElement('div');
+                div.className = 'solution-item';
+                div.innerHTML = `
+                    <p class="small mb-1 font-medium">${escapeHtml(sol.solutionText)}</p>
+                    <span class="text-xs text-muted">Pitched by ${escapeHtml(sol.authorName || 'Community Member')}</span>
+                `;
+                list.appendChild(div);
+            });
         }
 
-        // --- Event Listeners Setup ---
-        function setupEventListeners() {
-            // Search Input
-            searchInput.addEventListener('input', renderProblems);
+        document.getElementById('addSolutionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const text = document.getElementById('solInputText').value.trim();
+            if (!text || !currentProblemForSol) return;
 
-            // Category Filter Buttons
-            categoryFilters.addEventListener('click', (e) => {
-                if (e.target.classList.contains('filter-cat-btn')) {
-                    document.querySelectorAll('.filter-cat-btn').forEach(b => {
-                        b.classList.remove('btn-brand');
-                        b.classList.add('btn-outline-secondary');
-                    });
-                    e.target.classList.remove('btn-outline-secondary');
-                    e.target.classList.add('btn-brand');
-                    activeCategory = e.target.getAttribute('data-category');
-                    renderProblems();
-                }
-            });
+            try {
+                await addDoc(solutionsCol, {
+                    problemId: currentProblemForSol,
+                    solutionText: text,
+                    authorUid: currentUser ? currentUser.uid : 'anon',
+                    authorName: currentUser && !currentUser.isAnonymous ? (currentUser.displayName || currentUser.email || 'Community Member') : 'Anonymous',
+                    createdAt: serverTimestamp()
+                });
+                document.getElementById('solInputText').value = '';
+                renderSolutionsModalList();
+            } catch (err) {
+                console.error("Error posting solution:", err);
+            }
+        });
 
-            // Urgency & Sort Selects
-            urgencyFilter.addEventListener('change', (e) => {
-                activeUrgency = e.target.value;
-                renderProblems();
-            });
+        document.getElementById('submitProblemForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) return alert("Please sign in to publish an issue.");
 
-            sortBySelect.addEventListener('change', (e) => {
-                activeSort = e.target.value;
-                renderProblems();
-            });
+            const title = document.getElementById('probTitle').value.trim();
+            const category = document.getElementById('probCategory').value;
+            const severity = document.getElementById('probSeverity').value;
+            const location = document.getElementById('probLocation').value.trim();
+            const description = document.getElementById('probDesc').value.trim();
 
-            // Submit New Problem Form
-            document.getElementById('submitProblemForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const newProb = {
-                    id: Date.now(),
-                    title: document.getElementById('newTitle').value,
-                    category: document.getElementById('newCategory').value,
-                    urgency: document.getElementById('newUrgency').value,
-                    impact: Math.floor(Math.random() * 4) + 6, // Default randomized high impact 6-10
-                    feasibility: Math.floor(Math.random() * 5) + 5,
-                    description: document.getElementById('newDescription').value,
-                    audience: document.getElementById('newAudience').value,
-                    outcome: document.getElementById('newOutcome').value,
-                    upvotes: 1,
-                    solutions: []
-                };
-
-                problemsData.unshift(newProb);
-                renderProblems();
-                addProblemToMatrix(newProb);
+            try {
+                await addDoc(problemsCol, {
+                    title,
+                    category,
+                    severity,
+                    location,
+                    description,
+                    createdAt: serverTimestamp(),
+                    authorUid: currentUser.uid,
+                    authorName: currentUser.displayName || currentUser.email || 'Anonymous',
+                    voterUids: [currentUser.uid],
+                    status: 'Open'
+                });
 
                 bootstrap.Modal.getInstance(document.getElementById('submitProblemModal')).hide();
                 e.target.reset();
-                showToast('Problem successfully logged to community hub!');
-            });
+            } catch (err) {
+                console.error("Error creating problem:", err);
+            }
+        });
 
-            // Pitch Solution Form
-            document.getElementById('pitchSolutionForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const text = document.getElementById('newSolutionText').value;
-                const interested = document.getElementById('buildingInterestCheck').checked;
+        window.setAuthMode = (mode) => {
+            const nameGroup = document.getElementById('displayNameGroup');
+            const title = document.getElementById('authModalTitle');
+            const submitBtn = document.getElementById('authSubmitBtn');
+            submitBtn.dataset.mode = mode;
 
-                const problem = problemsData.find(p => p.id === currentOpenProblemId);
-                if (problem) {
-                    problem.solutions.unshift({
-                        id: Date.now(),
-                        text: text,
-                        upvotes: 1,
-                        author: 'You',
-                        interestedToBuild: interested
-                    });
-                    renderSolutionsList(problem.solutions);
-                    renderProblems();
-                    document.getElementById('newSolutionText').value = '';
-                    document.getElementById('buildingInterestCheck').checked = false;
-                    showToast('Solution idea successfully pitched!');
+            if (mode === 'signup') {
+                nameGroup.classList.remove('d-none');
+                title.innerText = 'Create Account';
+                submitBtn.innerText = 'Sign Up';
+            } else {
+                nameGroup.classList.add('d-none');
+                title.innerText = 'Sign In';
+                submitBtn.innerText = 'Sign In';
+            }
+        };
+
+        document.getElementById('authForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('authEmail').value;
+            const password = document.getElementById('authPassword').value;
+            const displayName = document.getElementById('authDisplayName').value;
+            const mode = document.getElementById('authSubmitBtn').dataset.mode;
+
+            try {
+                if (mode === 'signup') {
+                    const cred = await createUserWithEmailAndPassword(auth, email, password);
+                    if (displayName) await updateProfile(cred.user, { displayName });
+                } else {
+                    await signInWithEmailAndPassword(auth, email, password);
                 }
-            });
+                bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
+            } catch (err) {
+                alert("Authentication failed: " + err.message);
+            }
+        });
 
-            // Matrix Plot Form
-            document.getElementById('matrixPlotForm').addEventListener('submit', (e) => {
-                e.preventDefault();
-                const title = document.getElementById('plotTitle').value;
-                const impact = parseInt(document.getElementById('plotImpact').value);
-                const feasibility = parseInt(document.getElementById('plotFeasibility').value);
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await signOut(auth);
+            await signInAnonymously(auth);
+        });
 
-                if (matrixChartInstance) {
-                    matrixChartInstance.data.datasets[0].data.push({
-                        x: feasibility,
-                        y: impact,
-                        label: title
-                    });
-                    matrixChartInstance.update();
-                    document.getElementById('matrixPlotForm').reset();
-                    showToast('Solution plotted onto Matrix!');
-                }
-            });
-        }
-
-        // --- Matrix Chart Initialization ---
-        function initMatrixChart() {
+        function initChart() {
             const ctx = document.getElementById('matrixChart').getContext('2d');
-            
-            const matrixPoints = problemsData.map(p => ({
-                x: p.feasibility,
-                y: p.impact,
-                label: p.title
-            }));
-
-            matrixChartInstance = new Chart(ctx, {
+            matrixChart = new Chart(ctx, {
                 type: 'scatter',
                 data: {
                     datasets: [{
-                        label: 'Real-Life Problems',
-                        data: matrixPoints,
-                        backgroundColor: '#0d9488',
-                        pointRadius: 8,
-                        pointHoverRadius: 11
+                        label: 'Problems',
+                        data: [],
+                        backgroundColor: '#0d9488'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     scales: {
-                        x: {
-                            min: 0,
-                            max: 10,
-                            title: { display: true, text: 'Feasibility / Ease of Solution (1-10)', font: { size: 12, weight: 'bold' } },
-                            grid: { color: 'rgba(0,0,0,0.08)' }
-                        },
-                        y: {
-                            min: 0,
-                            max: 10,
-                            title: { display: true, text: 'Impact Level (1-10)', font: { size: 12, weight: 'bold' } },
-                            grid: { color: 'rgba(0,0,0,0.08)' }
-                        }
-                    },
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            callbacks: {
-                                label: function(ctx) {
-                                    const raw = ctx.raw;
-                                    return `${raw.label || 'Point'}: (Feasibility: ${raw.x}, Impact: ${raw.y})`;
-                                }
-                            }
-                        }
+                        x: { min: 0, max: 20, title: { display: true, text: 'Community Upvotes' } },
+                        y: { min: 0, max: 4, title: { display: true, text: 'Severity Score' } }
                     }
                 }
             });
         }
 
-        function addProblemToMatrix(prob) {
-            if (matrixChartInstance) {
-                matrixChartInstance.data.datasets[0].data.push({
-                    x: prob.feasibility,
-                    y: prob.impact,
-                    label: prob.title
-                });
-                matrixChartInstance.update();
+        function updateMatrixChart() {
+            if (!matrixChart) return;
+            const scatterData = problems.map(p => ({
+                x: (p.voterUids || []).length,
+                y: p.severity === 'High' ? 3 : (p.severity === 'Medium' ? 2 : 1),
+                label: p.title
+            }));
+            matrixChart.data.datasets[0].data = scatterData;
+            matrixChart.update();
+        }
+
+        function updateStats() {
+            document.getElementById('statIssues').innerText = problems.length;
+            const totalVotes = problems.reduce((acc, p) => acc + (p.voterUids || []).length, 0);
+            document.getElementById('statVotes').innerText = totalVotes;
+        }
+
+        document.getElementById('seedDataBtn').addEventListener('click', async () => {
+            const samples = [
+                { title: "Lobby Package Theft & Overcrowding", category: "Urban Infrastructure", severity: "High", location: "Multi-Family Housing", description: "Lobbies overflowing with package deliveries causing safety hazards.", voterUids: ["user1", "user2"], status: "Open" },
+                { title: "Single-Resident Produce Spoilage", category: "Environment", severity: "Medium", location: "Local Supermarkets", description: "Groceries package fresh produce in excessive quantities for solo dwellers.", voterUids: ["user1"], status: "Open" },
+                { title: "Fragmented Remote Notifications", category: "Work & Finance", severity: "High", location: "Remote Workplaces", description: "Knowledge workers spend 2+ hours context switching between Slack, Jira, and Email.", voterUids: ["user1", "user3", "user4"], status: "Open" }
+            ];
+
+            for (const s of samples) {
+                await addDoc(problemsCol, { ...s, createdAt: serverTimestamp(), authorUid: currentUser ? currentUser.uid : 'seed' });
             }
-        }
+        });
 
-        // --- Copy Framework Templates ---
-        function copyTemplate(type) {
-            let text = "";
-            if (type === '5whys') {
-                text = "5-WHYS ROOT CAUSE TEMPLATE:\n1. Problem Statement: [Describe]\n2. Why does this occur?: [Reason 1]\n3. Why 1?: [Reason 2]\n4. Why 2?: [Reason 3]\n5. Root Cause: [Fundamental issue]";
-            } else if (type === 'fishbone') {
-                text = "ISHIKAWA FISHBONE CATEGORIES:\n- People Factors:\n- Process Barriers:\n- Technical Limits:\n- Environmental Constraints:";
-            } else if (type === 'mvp') {
-                text = "MVP HYPOTHESIS:\nWe believe that [Target Demographic] experiences pain with [Problem]. If we build [Minimal Solution Feature], they will [Expected Action/Metric].";
+        // Event Filters
+        document.getElementById('categoryFilters').addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-cat')) {
+                document.querySelectorAll('.filter-cat').forEach(b => { b.classList.remove('btn-brand'); b.classList.add('btn-outline-secondary'); });
+                e.target.classList.remove('btn-outline-secondary');
+                e.target.classList.add('btn-brand');
+                activeCategory = e.target.dataset.cat;
+                renderProblems();
             }
-            
-            document.execCommand('copy');
-            showToast('Template copied to clipboard!');
-        }
+        });
 
-        // --- UI Utilities ---
-        function showToast(msg) {
-            document.getElementById('toastMessage').innerText = msg;
-            const toastEl = document.getElementById('appToast');
-            const toast = new bootstrap.Toast(toastEl);
-            toast.show();
-        }
+        document.getElementById('severityFilter').addEventListener('change', (e) => { activeSeverity = e.target.value; renderProblems(); });
+        document.getElementById('searchInput').addEventListener('input', (e) => { searchKeyword = e.target.value; renderProblems(); });
 
-        function updateStatsCounters() {
-            document.getElementById('statProblems').innerText = problemsData.length;
-            const totalSols = problemsData.reduce((acc, p) => acc + p.solutions.length, 0);
-            document.getElementById('statSolutions').innerText = totalSols;
+        // Theme Toggle
+        document.getElementById('themeToggle').addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-bs-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-bs-theme', next);
+            document.getElementById('themeIcon').setAttribute('data-lucide', next === 'dark' ? 'sun' : 'moon');
+            lucide.createIcons();
+        });
+
+        function escapeHtml(str) {
+            return (str || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
     </script>
 </body>
 </html>
+
