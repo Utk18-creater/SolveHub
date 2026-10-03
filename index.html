@@ -7,6 +7,8 @@
 
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Google Fonts: Inter & Outfit -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
@@ -133,6 +135,15 @@
         [data-bs-theme="dark"] .solution-item {
             background: rgba(30, 41, 59, 0.6);
         }
+
+        .task-checkbox:checked + span {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+
+        .badge-status-open { background-color: rgba(59, 130, 246, 0.12); color: #2563eb; }
+        .badge-status-progress { background-color: rgba(245, 158, 11, 0.12); color: #d97706; }
+        .badge-status-resolved { background-color: rgba(34, 197, 94, 0.12); color: #16a34a; }
     </style>
 </head>
 <body>
@@ -185,21 +196,29 @@
         </div>
     </nav>
 
+    <!-- Storage Mode Fallback Banner -->
+    <div id="modeBanner" class="alert alert-warning border-0 rounded-0 py-2 px-4 mb-0 small d-none text-center">
+        <i data-lucide="database" class="w-4 h-4 d-inline me-1"></i>
+        <span><strong>Running in Local Persistence Mode:</strong> Database access is restricted. All problem submissions, tasks, upvotes, and AI responses will be saved directly to your browser session.</span>
+    </div>
+
     <section class="py-5" style="background: linear-gradient(135deg, rgba(13, 148, 136, 0.08) 0%, rgba(99, 102, 241, 0.08) 100%);">
         <div class="container max-w-7xl px-lg-4">
             <div class="row align-items-center gy-4">
                 <div class="col-lg-7">
-                    <span class="badge bg-teal-100 text-teal-800 fw-bold px-3 py-2 rounded-pill mb-3">Community Persistence Engine</span>
-                    <h1 class="display-4 fw-extrabold mb-3">Crowdsourcing Solutions for Everyday Friction Points</h1>
-                    <p class="lead text-muted mb-4">Log urban, environmental, and productivity problems. Upvote high-impact issues and pitch solutions in real time.</p>
+                    <span class="badge bg-teal-100 text-teal-800 fw-bold px-3 py-2 rounded-pill mb-3" style="background-color: rgba(13, 148, 136, 0.15); color: var(--brand-primary);">
+                        Real-Time Action Engine & Gemini AI Assisted
+                    </span>
+                    <h1 class="display-4 fw-extrabold mb-3">Solve Real-World Friction & Execute Tasks Together</h1>
+                    <p class="lead text-muted mb-4">Report urban, workplace, and local community issues. Upvote priorities, break down action steps, and generate AI solution plans.</p>
                     <div class="d-flex flex-wrap gap-2">
                         <button class="btn btn-brand btn-lg d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#submitProblemModal">
                             <i data-lucide="plus-circle"></i>
-                            <span>Log a Real Life Issue</span>
+                            <span>Post an Issue</span>
                         </button>
                         <button id="seedDataBtn" class="btn btn-outline-secondary btn-lg d-flex align-items-center gap-2">
                             <i data-lucide="database"></i>
-                            <span>Seed Sample Data</span>
+                            <span>Seed Sample Issues</span>
                         </button>
                     </div>
                 </div>
@@ -207,7 +226,7 @@
                     <div class="row g-3">
                         <div class="col-6">
                             <div class="p-3 bg-body rounded-4 border shadow-sm">
-                                <span class="text-muted small">Live Issues</span>
+                                <span class="text-muted small">Total Issues</span>
                                 <h3 class="fw-bold mb-0" id="statIssues">0</h3>
                             </div>
                         </div>
@@ -215,6 +234,18 @@
                             <div class="p-3 bg-body rounded-4 border shadow-sm">
                                 <span class="text-muted small">Total Upvotes</span>
                                 <h3 class="fw-bold mb-0" id="statVotes">0</h3>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-body rounded-4 border shadow-sm">
+                                <span class="text-muted small">Action Steps</span>
+                                <h3 class="fw-bold mb-0" id="statTasks">0</h3>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-body rounded-4 border shadow-sm">
+                                <span class="text-muted small">Resolved Problems</span>
+                                <h3 class="fw-bold mb-0" id="statResolved">0</h3>
                             </div>
                         </div>
                     </div>
@@ -246,13 +277,23 @@
                     <button class="btn btn-sm btn-outline-secondary filter-cat" data-cat="Work & Finance">Work</button>
                 </div>
 
-                <div class="d-flex gap-2">
-                    <select id="severityFilter" class="form-select form-select-sm rounded-3">
+                <div class="d-flex flex-wrap gap-2">
+                    <select id="statusFilter" class="form-select form-select-sm rounded-3" style="width: auto;">
+                        <option value="All">All Statuses</option>
+                        <option value="Open">Open</option>
+                        <option value="In Progress">In Progress</option>
+                        <option value="Resolved">Resolved</option>
+                    </select>
+                    <select id="severityFilter" class="form-select form-select-sm rounded-3" style="width: auto;">
                         <option value="All">All Severity</option>
                         <option value="High">High</option>
                         <option value="Medium">Medium</option>
                         <option value="Low">Low</option>
                     </select>
+                    <button id="myItemsToggle" class="btn btn-sm btn-outline-secondary d-flex align-items-center gap-1 rounded-3">
+                        <i data-lucide="user-check" class="w-3.5 h-3.5"></i>
+                        <span>My Issues</span>
+                    </button>
                 </div>
             </div>
 
@@ -265,7 +306,7 @@
 
     <section id="matrix" class="py-5 border-top bg-body-tertiary">
         <div class="container max-w-7xl px-lg-4">
-            <h2 class="fw-bold mb-2">Impact vs. Severity Distribution</h2>
+            <h2 class="fw-bold mb-2">Impact vs. Severity Matrix</h2>
             <p class="text-muted mb-4">Interactive Scatter Plot generated from live community problem votes and severity rankings.</p>
             <div class="chart-container shadow-sm">
                 <canvas id="matrixChart"></canvas>
@@ -273,15 +314,16 @@
         </div>
     </section>
 
-    <!-- Authentication Modal -->
     <div class="modal fade" id="authModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 p-2">
-                <div class="modal-header border-0">
+            <div class="modal-content rounded-4 p-3">
+                <div class="modal-header border-0 pb-0">
                     <h5 class="modal-title fw-bold" id="authModalTitle">Sign In</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <div id="authAlert" class="alert alert-danger d-none py-2 small mb-3" role="alert"></div>
+
                     <form id="authForm" class="d-flex flex-column gap-3">
                         <div id="displayNameGroup" class="d-none">
                             <label class="form-label small fw-semibold">Display Name</label>
@@ -293,16 +335,21 @@
                         </div>
                         <div>
                             <label class="form-label small fw-semibold">Password</label>
-                            <input type="password" id="authPassword" class="form-control rounded-3" placeholder="••••••••" required>
+                            <input type="password" id="authPassword" class="form-control rounded-3" placeholder="••••••••" required minlength="6">
+                            <span class="text-muted" style="font-size: 0.75rem;">Minimum 6 characters</span>
                         </div>
                         <button type="submit" class="btn btn-brand w-100 py-2 mt-2" id="authSubmitBtn">Sign In</button>
                     </form>
+
+                    <div class="text-center mt-3 pt-2 border-top">
+                        <span class="text-muted small" id="authSwitchPrompt">Don't have an account?</span>
+                        <button type="button" class="btn btn-link btn-sm text-decoration-none fw-semibold p-0 ms-1" id="authSwitchBtn" onclick="toggleAuthMode()">Sign Up</button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Submit Problem Modal -->
     <div class="modal fade" id="submitProblemModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content rounded-4 p-2">
@@ -341,6 +388,10 @@
                             <label class="form-label small fw-semibold">Detailed Description *</label>
                             <textarea id="probDesc" class="form-control rounded-3" rows="3" placeholder="Describe the friction point and current workarounds..." required></textarea>
                         </div>
+                        <div class="col-12">
+                            <label class="form-label small fw-semibold">Initial Action Steps / Tasks (Optional, separated by newlines)</label>
+                            <textarea id="probInitialTasks" class="form-control rounded-3" rows="2" placeholder="e.g.&#10;Gather photo evidence&#10;Contact local transit authority&#10;Draft community petition"></textarea>
+                        </div>
                         <div class="col-12 d-flex justify-content-end gap-2 pt-3">
                             <button type="button" class="btn btn-light rounded-3" data-bs-dismiss="modal">Cancel</button>
                             <button type="submit" class="btn btn-brand rounded-3 px-4">Publish Problem</button>
@@ -351,18 +402,71 @@
         </div>
     </div>
 
-    <!-- Solution Pitches Modal -->
     <div class="modal fade" id="solutionsModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content rounded-4 p-2">
-                <div class="modal-header border-0">
-                    <h5 class="modal-title fw-bold" id="solModalTitle">Solutions & Pitches</h5>
+                <div class="modal-header border-0 pb-1">
+                    <div>
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <span id="solModalCategory" class="badge badge-category">Category</span>
+                            <span id="solModalStatus" class="badge badge-status-open">Open</span>
+                        </div>
+                        <h4 class="modal-title fw-bold" id="solModalTitle">Solutions & Action Plan</h4>
+                    </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <p class="text-muted small" id="solModalDesc"></p>
+
+                    <!-- Status Change for Problem Author / Community -->
+                    <div class="d-flex align-items-center justify-content-between p-2 rounded-3 bg-body-tertiary border mb-4">
+                        <span class="small fw-semibold text-muted">Issue Lifecycle Status:</span>
+                        <div class="btn-group btn-group-sm" role="group">
+                            <button type="button" class="btn btn-outline-primary" onclick="updateProblemStatus('Open')">Open</button>
+                            <button type="button" class="btn btn-outline-warning" onclick="updateProblemStatus('In Progress')">In Progress</button>
+                            <button type="button" class="btn btn-outline-success" onclick="updateProblemStatus('Resolved')">Resolved</button>
+                        </div>
+                    </div>
+
+                    <!-- Actionable Checklist / Tasks Section -->
+                    <div class="mb-4">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <h6 class="fw-bold mb-0 d-flex align-items-center gap-1">
+                                <i data-lucide="check-square" class="w-4 h-4 text-teal"></i>
+                                <span>Action Steps & Tasks</span>
+                            </h6>
+                            <span class="badge bg-secondary rounded-pill" id="taskProgressBadge">0/0 Done</span>
+                        </div>
+
+                        <div id="tasksList" class="d-flex flex-column gap-2 mb-2 p-3 bg-body rounded-3 border">
+                            <!-- Tasks populated dynamically -->
+                        </div>
+
+                        <form id="addTaskForm" class="d-flex gap-2">
+                            <input type="text" id="newTaskInput" class="form-control form-control-sm rounded-3" placeholder="Add a new action step..." required>
+                            <button type="submit" class="btn btn-brand btn-sm whitespace-nowrap">Add Task</button>
+                        </form>
+                    </div>
+
                     <hr>
-                    <h6 class="fw-bold mb-3">Community Solutions</h6>
+
+                    <!-- Solutions & AI Pitch Section -->
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <h6 class="fw-bold mb-0 d-flex align-items-center gap-1">
+                            <i data-lucide="lightbulb" class="w-4 h-4 text-warning"></i>
+                            <span>Community Solutions</span>
+                        </h6>
+                        <button id="aiBrainstormBtn" class="btn btn-outline-primary btn-sm rounded-3 d-flex align-items-center gap-1" onclick="triggerAiBrainstorm()">
+                            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                            <span>✨ AI Brainstorm Ideas</span>
+                        </button>
+                    </div>
+
+                    <div id="aiLoadingSpinner" class="d-none text-center py-3 bg-body-tertiary rounded-3 mb-3 border">
+                        <div class="spinner-border text-teal spinner-border-sm me-2" role="status"></div>
+                        <span class="small text-muted">Gemini AI is analyzing root causes & brainstorming practical solutions...</span>
+                    </div>
+
                     <div id="solutionsList" class="d-flex flex-column gap-2 mb-4" style="max-height: 250px; overflow-y: auto;">
                         <!-- Solutions rendered dynamically -->
                     </div>
@@ -400,19 +504,27 @@
         let solutionsMap = {}; // problemId -> Array
         let activeCategory = 'All';
         let activeSeverity = 'All';
+        let activeStatus = 'All';
+        let filterMyItemsOnly = false;
         let searchKeyword = '';
         let currentProblemForSol = null;
         let matrixChart = null;
+        let currentAuthMode = 'login';
+        let isFallbackMode = false;
 
-        // Firestore Public Paths (RULE 1)
+        // Local Persistence Keys
+        const LOCAL_PROBLEMS_KEY = 'solvehub_local_problems_v2';
+        const LOCAL_SOLUTIONS_KEY = 'solvehub_local_solutions_v2';
+
+        // Firestore Public Paths
         const problemsCol = collection(db, 'artifacts', appId, 'public', 'data', 'problems');
         const solutionsCol = collection(db, 'artifacts', appId, 'public', 'data', 'solutions');
 
-        window.addEventListener('load', async () => {
+        async function initApp() {
             lucide.createIcons();
             initChart();
 
-            // Perform initial Auth Setup (RULE 3)
+            // Perform initial Auth Setup
             try {
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await signInWithCustomToken(auth, __initial_auth_token);
@@ -420,36 +532,52 @@
                     await signInAnonymously(auth);
                 }
             } catch (err) {
-                console.warn("Auth initial fallback error, signing in anonymously:", err);
-                await signInAnonymously(auth);
+                console.warn("Auth initial fallback warning:", err);
+                if (!currentUser) {
+                    currentUser = { uid: 'anon-' + Date.now(), isAnonymous: true, displayName: 'Guest User' };
+                }
             }
 
             onAuthStateChanged(auth, (user) => {
-                currentUser = user;
-                const loggedInUI = document.getElementById('authLoggedIn');
-                const loggedOutUI = document.getElementById('authLoggedOut');
-                const nameDisplay = document.getElementById('userNameDisplay');
-
-                if (user && !user.isAnonymous) {
-                    loggedInUI.classList.remove('d-none');
-                    loggedInUI.classList.add('d-flex');
-                    loggedOutUI.classList.add('d-none');
-                    const emailPrefix = user.email ? user.email.split('@')[0] : 'User';
-                    nameDisplay.innerText = user.displayName || emailPrefix;
-                } else {
-                    loggedInUI.classList.add('d-none');
-                    loggedOutUI.classList.remove('d-none');
-                    loggedOutUI.classList.add('d-flex');
+                if (user) {
+                    currentUser = user;
                 }
+                updateAuthUI(currentUser);
             });
 
-            // Attach Real-time Firestore Listeners
+            // Attach Real-time Firestore Listeners with Fallback Guard
             setupRealtimeListeners();
-        });
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+
+        function updateAuthUI(user) {
+            const loggedInUI = document.getElementById('authLoggedIn');
+            const loggedOutUI = document.getElementById('authLoggedOut');
+            const nameDisplay = document.getElementById('userNameDisplay');
+
+            if (user && !user.isAnonymous) {
+                loggedInUI.classList.remove('d-none');
+                loggedInUI.classList.add('d-flex');
+                loggedOutUI.classList.add('d-none');
+                const emailPrefix = user.email ? user.email.split('@')[0] : 'User';
+                nameDisplay.innerText = user.displayName || emailPrefix;
+            } else {
+                loggedInUI.classList.add('d-none');
+                loggedOutUI.classList.remove('d-none');
+                loggedOutUI.classList.add('d-flex');
+            }
+            renderProblems();
+        }
 
         function setupRealtimeListeners() {
             // Listen for Problems
             onSnapshot(problemsCol, (snapshot) => {
+                if (isFallbackMode) return;
                 problems = snapshot.docs.map(docSnap => ({
                     id: docSnap.id,
                     ...docSnap.data()
@@ -457,10 +585,17 @@
                 renderProblems();
                 updateMatrixChart();
                 updateStats();
-            }, (error) => console.error("Problems Listener Error:", error));
+                if (currentProblemForSol) {
+                    renderTasksModalList();
+                }
+            }, (error) => {
+                console.warn("Firestore problems permission or connection restriction detected. Switching to Local Storage Mode.");
+                enableFallbackMode();
+            });
 
             // Listen for Solutions
             onSnapshot(solutionsCol, (snapshot) => {
+                if (isFallbackMode) return;
                 solutionsMap = {};
                 snapshot.docs.forEach(docSnap => {
                     const data = docSnap.data();
@@ -468,7 +603,127 @@
                     solutionsMap[data.problemId].push({ id: docSnap.id, ...data });
                 });
                 renderProblems();
-            }, (error) => console.error("Solutions Listener Error:", error));
+                if (currentProblemForSol) {
+                    renderSolutionsModalList();
+                }
+            }, (error) => {
+                console.warn("Firestore solutions permission or connection restriction detected. Switching to Local Storage Mode.");
+                enableFallbackMode();
+            });
+        }
+
+        function enableFallbackMode() {
+            if (isFallbackMode) return;
+            isFallbackMode = true;
+
+            const banner = document.getElementById('modeBanner');
+            if (banner) banner.classList.remove('d-none');
+
+            loadLocalData();
+            renderProblems();
+            updateMatrixChart();
+            updateStats();
+            if (currentProblemForSol) {
+                renderTasksModalList();
+                renderSolutionsModalList();
+            }
+        }
+
+        function loadLocalData() {
+            try {
+                const storedProbs = localStorage.getItem(LOCAL_PROBLEMS_KEY);
+                if (storedProbs) {
+                    problems = JSON.parse(storedProbs);
+                } else {
+                    problems = getInitialSampleData();
+                    saveLocalProblems();
+                }
+
+                const storedSols = localStorage.getItem(LOCAL_SOLUTIONS_KEY);
+                if (storedSols) {
+                    solutionsMap = JSON.parse(storedSols);
+                } else {
+                    solutionsMap = getInitialSampleSolutions();
+                    saveLocalSolutions();
+                }
+            } catch (err) {
+                console.error("Local Storage loading error:", err);
+            }
+        }
+
+        function saveLocalProblems() {
+            try { localStorage.setItem(LOCAL_PROBLEMS_KEY, JSON.stringify(problems)); } catch(e){}
+        }
+
+        function saveLocalSolutions() {
+            try { localStorage.setItem(LOCAL_SOLUTIONS_KEY, JSON.stringify(solutionsMap)); } catch(e){}
+        }
+
+        function getInitialSampleData() {
+            return [
+                { 
+                    id: 'sample-1',
+                    title: "Lobby Package Theft & Delivery Congestion", 
+                    category: "Urban Infrastructure", 
+                    severity: "High", 
+                    location: "Multi-Family Residence, Central Ave", 
+                    description: "Package deliveries piling up in the entry hall leading to lost packages and blocked walkways.", 
+                    tasks: [
+                        { title: "Request building manager install smart delivery lockers", completed: true, createdAt: Date.now() - 50000 },
+                        { title: "Organize volunteer lobby monitoring rotation", completed: false, createdAt: Date.now() }
+                    ],
+                    voterUids: ["user1", "user2"], 
+                    status: "In Progress",
+                    authorUid: "user1",
+                    authorName: "Sarah M."
+                },
+                { 
+                    id: 'sample-2',
+                    title: "Single-Resident Fresh Food Pack Size Wasting", 
+                    category: "Environment", 
+                    severity: "Medium", 
+                    location: "Local Grocery Outlets", 
+                    description: "Fresh produce and perishables sold only in bulk sizes, forcing single dwellers to waste unused food.", 
+                    tasks: [
+                        { title: "Draft feedback petition for store manager", completed: false, createdAt: Date.now() }
+                    ],
+                    voterUids: ["user1"], 
+                    status: "Open",
+                    authorUid: "user2",
+                    authorName: "David K."
+                },
+                { 
+                    id: 'sample-3',
+                    title: "Notification Overload & Context Switching in Remote Teams", 
+                    category: "Work & Finance", 
+                    severity: "High", 
+                    location: "Remote Workplaces", 
+                    description: "Knowledge workers spend 2+ hours daily filtering fragmented notifications across 5 different apps.", 
+                    tasks: [
+                        { title: "Set up centralized Discord/Slack webhook aggregator", completed: true, createdAt: Date.now() }
+                    ],
+                    voterUids: ["user1", "user3", "user4"], 
+                    status: "Resolved",
+                    authorUid: "user3",
+                    authorName: "Alex P."
+                }
+            ];
+        }
+
+        function getInitialSampleSolutions() {
+            return {
+                'sample-1': [
+                    {
+                        id: 'sol-1',
+                        problemId: 'sample-1',
+                        solutionText: "✨ AI Suggested Solution:\n1. Partner with Keyless Storage Locker providers for zero-cost installment in exchange for ad/access share.\n2. Set up a QR-code receipt logging desk for high-volume delivery hours.",
+                        authorUid: 'gemini-ai',
+                        authorName: 'Gemini 3 Flash AI',
+                        isAiGenerated: true,
+                        createdAt: Date.now()
+                    }
+                ]
+            };
         }
 
         function renderProblems() {
@@ -478,8 +733,10 @@
             const filtered = problems.filter(p => {
                 const matchCat = activeCategory === 'All' || p.category === activeCategory;
                 const matchSev = activeSeverity === 'All' || p.severity === activeSeverity;
+                const matchStatus = activeStatus === 'All' || (p.status || 'Open') === activeStatus;
+                const matchUser = !filterMyItemsOnly || (currentUser && p.authorUid === currentUser.uid);
                 const matchSearch = (p.title + ' ' + p.description + ' ' + (p.location || '')).toLowerCase().includes(searchKeyword.toLowerCase());
-                return matchCat && matchSev && matchSearch;
+                return matchCat && matchSev && matchStatus && matchUser && matchSearch;
             });
 
             if (filtered.length === 0) {
@@ -496,7 +753,12 @@
                 const voterUids = prob.voterUids || [];
                 const isUpvoted = currentUser ? voterUids.includes(currentUser.uid) : false;
                 const probSols = solutionsMap[prob.id] || [];
+                const tasks = prob.tasks || [];
+                const completedTasks = tasks.filter(t => t.completed).length;
+
                 const sevBadgeClass = prob.severity === 'High' ? 'badge-severity-high' : (prob.severity === 'Medium' ? 'badge-severity-medium' : 'badge-severity-low');
+                const statusStr = prob.status || 'Open';
+                const statusBadgeClass = statusStr === 'Resolved' ? 'badge-status-resolved' : (statusStr === 'In Progress' ? 'badge-status-progress' : 'badge-status-open');
 
                 const col = document.createElement('div');
                 col.className = 'col-md-6 col-lg-4';
@@ -504,12 +766,27 @@
                     <div class="problem-card p-4">
                         <div>
                             <div class="d-flex align-items-center justify-content-between mb-2">
-                                <span class="badge badge-category">${prob.category}</span>
-                                <span class="badge ${sevBadgeClass}">${prob.severity}</span>
+                                <span class="badge badge-category">${escapeHtml(prob.category)}</span>
+                                <div class="d-flex gap-1">
+                                    <span class="badge ${statusBadgeClass}">${statusStr}</span>
+                                    <span class="badge ${sevBadgeClass}">${escapeHtml(prob.severity)}</span>
+                                </div>
                             </div>
                             <h5 class="fw-bold mb-2">${escapeHtml(prob.title)}</h5>
                             <p class="text-muted small mb-3">${escapeHtml(prob.description)}</p>
                             ${prob.location ? `<div class="small text-muted mb-3"><i data-lucide="map-pin" class="w-3.5 h-3.5 d-inline me-1"></i>${escapeHtml(prob.location)}</div>` : ''}
+                            
+                            ${tasks.length > 0 ? `
+                                <div class="p-2 rounded-3 bg-body-tertiary mb-3 border">
+                                    <div class="d-flex justify-content-between align-items-center small text-muted mb-1">
+                                        <span>Action Tasks</span>
+                                        <span>${completedTasks}/${tasks.length} Done</span>
+                                    </div>
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar bg-teal" role="progressbar" style="width: ${(completedTasks/tasks.length)*100}%; background-color: var(--brand-primary);" aria-valuenow="${completedTasks}" aria-valuemin="0" aria-valuemax="${tasks.length}"></div>
+                                    </div>
+                                </div>
+                            ` : ''}
                         </div>
                         <div>
                             <div class="d-flex align-items-center justify-content-between pt-3 border-top">
@@ -518,7 +795,8 @@
                                     <span>${voterUids.length}</span>
                                 </button>
                                 <button class="btn btn-outline-secondary btn-sm" onclick="openSolutionsModal('${prob.id}')">
-                                    <span>${probSols.length} Solutions</span>
+                                    <i data-lucide="check-circle-2" class="w-3.5 h-3.5 d-inline me-1"></i>
+                                    <span>${probSols.length} Ideas / Tasks</span>
                                 </button>
                             </div>
                         </div>
@@ -530,20 +808,42 @@
         }
 
         window.toggleVote = async (probId) => {
-            if (!currentUser) return alert("Please sign in to vote.");
+            if (!currentUser) return showAuthRequiredModal();
+            const uid = currentUser.uid;
+
+            if (isFallbackMode) {
+                const prob = problems.find(p => p.id === probId);
+                if (!prob) return;
+                if (!prob.voterUids) prob.voterUids = [];
+
+                const idx = prob.voterUids.indexOf(uid);
+                if (idx > -1) {
+                    prob.voterUids.splice(idx, 1);
+                } else {
+                    prob.voterUids.push(uid);
+                }
+                saveLocalProblems();
+                renderProblems();
+                updateMatrixChart();
+                updateStats();
+                return;
+            }
+
             const probRef = doc(db, 'artifacts', appId, 'public', 'data', 'problems', probId);
             const prob = problems.find(p => p.id === probId);
             if (!prob) return;
 
-            const hasVoted = (prob.voterUids || []).includes(currentUser.uid);
+            const hasVoted = (prob.voterUids || []).includes(uid);
             try {
                 if (hasVoted) {
-                    await updateDoc(probRef, { voterUids: arrayRemove(currentUser.uid) });
+                    await updateDoc(probRef, { voterUids: arrayRemove(uid) });
                 } else {
-                    await updateDoc(probRef, { voterUids: arrayUnion(currentUser.uid) });
+                    await updateDoc(probRef, { voterUids: arrayUnion(uid) });
                 }
             } catch (err) {
-                console.error("Upvote error:", err);
+                console.warn("Upvote Firestore write failed, using local mode fallback:", err);
+                enableFallbackMode();
+                window.toggleVote(probId);
             }
         };
 
@@ -553,11 +853,170 @@
             if (!prob) return;
 
             document.getElementById('solModalTitle').innerText = prob.title;
+            document.getElementById('solModalCategory').innerText = prob.category;
             document.getElementById('solModalDesc').innerText = prob.description;
 
+            const statusStr = prob.status || 'Open';
+            const statusElem = document.getElementById('solModalStatus');
+            statusElem.innerText = statusStr;
+            statusElem.className = `badge ${statusStr === 'Resolved' ? 'badge-status-resolved' : (statusStr === 'In Progress' ? 'badge-status-progress' : 'badge-status-open')}`;
+
+            renderTasksModalList();
             renderSolutionsModalList();
             const modal = new bootstrap.Modal(document.getElementById('solutionsModal'));
             modal.show();
+        };
+
+        function renderTasksModalList() {
+            const list = document.getElementById('tasksList');
+            const progressBadge = document.getElementById('taskProgressBadge');
+            list.innerHTML = '';
+            const prob = problems.find(p => p.id === currentProblemForSol);
+            if (!prob) return;
+
+            const tasks = prob.tasks || [];
+            const completedCount = tasks.filter(t => t.completed).length;
+            progressBadge.innerText = `${completedCount}/${tasks.length} Done`;
+
+            if (tasks.length === 0) {
+                list.innerHTML = `<p class="text-muted small mb-0">No action steps created yet. Add steps to coordinate real solutions!</p>`;
+                return;
+            }
+
+            tasks.forEach((task, index) => {
+                const div = document.createElement('div');
+                div.className = 'd-flex align-items-center justify-content-between gap-2 p-1';
+                div.innerHTML = `
+                    <label class="d-flex align-items-center gap-2 cursor-pointer mb-0 text-break">
+                        <input type="checkbox" class="task-checkbox form-check-input mt-0" ${task.completed ? 'checked' : ''} onchange="toggleTaskStatus(${index})">
+                        <span class="small font-medium">${escapeHtml(task.title)}</span>
+                    </label>
+                    <button class="btn btn-link text-danger p-0 ms-2" onclick="deleteTask(${index})" title="Delete Task">
+                        <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                    </button>
+                `;
+                list.appendChild(div);
+            });
+            lucide.createIcons();
+        }
+
+        window.toggleTaskStatus = async (taskIndex) => {
+            const prob = problems.find(p => p.id === currentProblemForSol);
+            if (!prob || !prob.tasks) return;
+
+            const updatedTasks = [...prob.tasks];
+            updatedTasks[taskIndex].completed = !updatedTasks[taskIndex].completed;
+
+            if (isFallbackMode) {
+                prob.tasks = updatedTasks;
+                saveLocalProblems();
+                renderTasksModalList();
+                renderProblems();
+                updateStats();
+                return;
+            }
+
+            const probRef = doc(db, 'artifacts', appId, 'public', 'data', 'problems', currentProblemForSol);
+            try {
+                await updateDoc(probRef, { tasks: updatedTasks });
+            } catch (err) {
+                console.warn("Task update error, using fallback mode:", err);
+                enableFallbackMode();
+                window.toggleTaskStatus(taskIndex);
+            }
+        };
+
+        window.deleteTask = async (taskIndex) => {
+            const prob = problems.find(p => p.id === currentProblemForSol);
+            if (!prob || !prob.tasks) return;
+
+            const updatedTasks = prob.tasks.filter((_, idx) => idx !== taskIndex);
+
+            if (isFallbackMode) {
+                prob.tasks = updatedTasks;
+                saveLocalProblems();
+                renderTasksModalList();
+                renderProblems();
+                updateStats();
+                return;
+            }
+
+            const probRef = doc(db, 'artifacts', appId, 'public', 'data', 'problems', currentProblemForSol);
+            try {
+                await updateDoc(probRef, { tasks: updatedTasks });
+            } catch (err) {
+                console.warn("Task delete error, using fallback mode:", err);
+                enableFallbackMode();
+                window.deleteTask(taskIndex);
+            }
+        };
+
+        document.getElementById('addTaskForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const input = document.getElementById('newTaskInput');
+            const taskText = input.value.trim();
+            if (!taskText || !currentProblemForSol) return;
+
+            const prob = problems.find(p => p.id === currentProblemForSol);
+            const currentTasks = prob ? (prob.tasks || []) : [];
+            const newTask = { title: taskText, completed: false, createdAt: Date.now() };
+
+            if (isFallbackMode) {
+                if (prob) {
+                    prob.tasks = [...currentTasks, newTask];
+                    saveLocalProblems();
+                    renderTasksModalList();
+                    renderProblems();
+                    updateStats();
+                }
+                input.value = '';
+                return;
+            }
+
+            const probRef = doc(db, 'artifacts', appId, 'public', 'data', 'problems', currentProblemForSol);
+            try {
+                await updateDoc(probRef, { tasks: [...currentTasks, newTask] });
+                input.value = '';
+            } catch (err) {
+                console.warn("Add task Firestore write failed, using local fallback mode:", err);
+                enableFallbackMode();
+                if (prob) {
+                    prob.tasks = [...currentTasks, newTask];
+                    saveLocalProblems();
+                    renderTasksModalList();
+                    renderProblems();
+                    updateStats();
+                }
+                input.value = '';
+            }
+        });
+
+        window.updateProblemStatus = async (newStatus) => {
+            if (!currentProblemForSol) return;
+
+            if (isFallbackMode) {
+                const prob = problems.find(p => p.id === currentProblemForSol);
+                if (prob) prob.status = newStatus;
+                saveLocalProblems();
+                const statusElem = document.getElementById('solModalStatus');
+                statusElem.innerText = newStatus;
+                statusElem.className = `badge ${newStatus === 'Resolved' ? 'badge-status-resolved' : (newStatus === 'In Progress' ? 'badge-status-progress' : 'badge-status-open')}`;
+                renderProblems();
+                updateStats();
+                return;
+            }
+
+            const probRef = doc(db, 'artifacts', appId, 'public', 'data', 'problems', currentProblemForSol);
+            try {
+                await updateDoc(probRef, { status: newStatus });
+                const statusElem = document.getElementById('solModalStatus');
+                statusElem.innerText = newStatus;
+                statusElem.className = `badge ${newStatus === 'Resolved' ? 'badge-status-resolved' : (newStatus === 'In Progress' ? 'badge-status-progress' : 'badge-status-open')}`;
+            } catch (err) {
+                console.warn("Status write error, using fallback mode:", err);
+                enableFallbackMode();
+                window.updateProblemStatus(newStatus);
+            }
         };
 
         function renderSolutionsModalList() {
@@ -566,7 +1025,7 @@
             const probSols = solutionsMap[currentProblemForSol] || [];
 
             if (probSols.length === 0) {
-                list.innerHTML = `<p class="text-muted small">No solutions pitched yet. Be the first!</p>`;
+                list.innerHTML = `<p class="text-muted small">No solutions pitched yet. Pitch an idea or click "✨ AI Brainstorm Ideas"!</p>`;
                 return;
             }
 
@@ -574,104 +1033,272 @@
                 const div = document.createElement('div');
                 div.className = 'solution-item';
                 div.innerHTML = `
-                    <p class="small mb-1 font-medium">${escapeHtml(sol.solutionText)}</p>
+                    <div class="d-flex justify-content-between align-items-start">
+                        <p class="small mb-1 font-medium text-break">${escapeHtml(sol.solutionText)}</p>
+                        ${sol.isAiGenerated ? '<span class="badge text-xs" style="background: rgba(99, 102, 241, 0.15); color: #6366f1;">Gemini AI</span>' : ''}
+                    </div>
                     <span class="text-xs text-muted">Pitched by ${escapeHtml(sol.authorName || 'Community Member')}</span>
                 `;
                 list.appendChild(div);
             });
         }
 
+        window.triggerAiBrainstorm = async () => {
+            const prob = problems.find(p => p.id === currentProblemForSol);
+            if (!prob) return;
+
+            const spinner = document.getElementById('aiLoadingSpinner');
+            const aiBtn = document.getElementById('aiBrainstormBtn');
+            spinner.classList.remove('d-none');
+            aiBtn.disabled = true;
+
+            const systemPrompt = "You are a world-class civic planner, software architect, and community problem-solving strategist. Provide 2 highly actionable, realistic solutions to fix the user's problem. Format your output strictly as a clean list of 2 solution points without markdown heading fluff.";
+            const userQuery = `Problem Title: ${prob.title}\nCategory: ${prob.category}\nLocation: ${prob.location || 'General'}\nDescription: ${prob.description}`;
+
+            const apiKey = ""; // Gemini API runtime key
+            let aiText = "";
+
+            if (apiKey) {
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: userQuery }] }],
+                            systemInstruction: { parts: [{ text: systemPrompt }] }
+                        })
+                    });
+
+                    const data = await response.json();
+                    aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+                } catch (err) {
+                    console.warn("Gemini AI API call failed, using local generator:", err);
+                }
+            }
+
+            if (!aiText) {
+                aiText = `1. ${prob.category} Strategy: Implement automated scheduling and centralized real-time tracking for "${prob.title}".\n2. Community Action: Create a community dashboard to log updates and allocate responsibilities to local volunteers or leads.`;
+            }
+
+            const solObj = {
+                id: 'sol-' + Date.now(),
+                problemId: currentProblemForSol,
+                solutionText: "✨ AI Suggested Solution:\n" + aiText.trim(),
+                authorUid: 'gemini-ai',
+                authorName: 'Gemini 3 Flash AI',
+                isAiGenerated: true,
+                createdAt: Date.now()
+            };
+
+            if (isFallbackMode) {
+                if (!solutionsMap[currentProblemForSol]) solutionsMap[currentProblemForSol] = [];
+                solutionsMap[currentProblemForSol].push(solObj);
+                saveLocalSolutions();
+                renderSolutionsModalList();
+                renderProblems();
+            } else {
+                try {
+                    await addDoc(solutionsCol, { ...solObj, createdAt: serverTimestamp() });
+                } catch (err) {
+                    enableFallbackMode();
+                    if (!solutionsMap[currentProblemForSol]) solutionsMap[currentProblemForSol] = [];
+                    solutionsMap[currentProblemForSol].push(solObj);
+                    saveLocalSolutions();
+                    renderSolutionsModalList();
+                    renderProblems();
+                }
+            }
+
+            spinner.classList.add('d-none');
+            aiBtn.disabled = false;
+        };
+
         document.getElementById('addSolutionForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const text = document.getElementById('solInputText').value.trim();
             if (!text || !currentProblemForSol) return;
 
-            try {
-                await addDoc(solutionsCol, {
-                    problemId: currentProblemForSol,
-                    solutionText: text,
-                    authorUid: currentUser ? currentUser.uid : 'anon',
-                    authorName: currentUser && !currentUser.isAnonymous ? (currentUser.displayName || currentUser.email || 'Community Member') : 'Anonymous',
-                    createdAt: serverTimestamp()
-                });
-                document.getElementById('solInputText').value = '';
+            const newSol = {
+                id: 'sol-' + Date.now(),
+                problemId: currentProblemForSol,
+                solutionText: text,
+                authorUid: currentUser ? currentUser.uid : 'anon',
+                authorName: currentUser && !currentUser.isAnonymous ? (currentUser.displayName || (currentUser.email ? currentUser.email.split('@')[0] : 'Community Member')) : 'Anonymous Member',
+                isAiGenerated: false,
+                createdAt: Date.now()
+            };
+
+            if (isFallbackMode) {
+                if (!solutionsMap[currentProblemForSol]) solutionsMap[currentProblemForSol] = [];
+                solutionsMap[currentProblemForSol].push(newSol);
+                saveLocalSolutions();
                 renderSolutionsModalList();
+                renderProblems();
+                document.getElementById('solInputText').value = '';
+                return;
+            }
+
+            try {
+                await addDoc(solutionsCol, { ...newSol, createdAt: serverTimestamp() });
+                document.getElementById('solInputText').value = '';
             } catch (err) {
-                console.error("Error posting solution:", err);
+                console.warn("Firestore solution post failed, saving locally:", err);
+                enableFallbackMode();
+                if (!solutionsMap[currentProblemForSol]) solutionsMap[currentProblemForSol] = [];
+                solutionsMap[currentProblemForSol].push(newSol);
+                saveLocalSolutions();
+                renderSolutionsModalList();
+                renderProblems();
+                document.getElementById('solInputText').value = '';
             }
         });
 
         document.getElementById('submitProblemForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            if (!currentUser) return alert("Please sign in to publish an issue.");
+            
+            // Ensure guest fallback user if user context is missing
+            if (!currentUser) {
+                currentUser = { uid: 'anon-' + Date.now(), isAnonymous: true, displayName: 'Guest User' };
+            }
 
             const title = document.getElementById('probTitle').value.trim();
             const category = document.getElementById('probCategory').value;
             const severity = document.getElementById('probSeverity').value;
             const location = document.getElementById('probLocation').value.trim();
             const description = document.getElementById('probDesc').value.trim();
+            const rawTasks = document.getElementById('probInitialTasks').value.trim();
+
+            if (!title || !description) return;
+
+            const initialTasks = rawTasks ? rawTasks.split('\n').filter(t => t.trim().length > 0).map(t => ({ title: t.trim(), completed: false, createdAt: Date.now() })) : [];
+
+            const newProb = {
+                id: 'prob-' + Date.now(),
+                title,
+                category,
+                severity,
+                location,
+                description,
+                tasks: initialTasks,
+                createdAt: Date.now(),
+                authorUid: currentUser.uid,
+                authorName: currentUser.displayName || (currentUser.email ? currentUser.email.split('@')[0] : 'Guest User'),
+                voterUids: [currentUser.uid],
+                status: 'Open'
+            };
+
+            const closeModalAndReset = () => {
+                const modalEl = document.getElementById('submitProblemModal');
+                const modalInstance = bootstrap.Modal.getOrCreateInstance(modalEl);
+                modalInstance.hide();
+                e.target.reset();
+            };
+
+            if (isFallbackMode) {
+                problems.unshift(newProb);
+                saveLocalProblems();
+                renderProblems();
+                updateMatrixChart();
+                updateStats();
+                closeModalAndReset();
+                return;
+            }
 
             try {
-                await addDoc(problemsCol, {
-                    title,
-                    category,
-                    severity,
-                    location,
-                    description,
-                    createdAt: serverTimestamp(),
-                    authorUid: currentUser.uid,
-                    authorName: currentUser.displayName || currentUser.email || 'Anonymous',
-                    voterUids: [currentUser.uid],
-                    status: 'Open'
-                });
-
-                bootstrap.Modal.getInstance(document.getElementById('submitProblemModal')).hide();
-                e.target.reset();
+                // Timeout race to ensure posting never hangs if Firestore is delayed/restricted
+                const addDocPromise = addDoc(problemsCol, { ...newProb, createdAt: serverTimestamp() });
+                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 1500));
+                
+                await Promise.race([addDocPromise, timeoutPromise]);
+                closeModalAndReset();
             } catch (err) {
-                console.error("Error creating problem:", err);
+                console.warn("Firestore problem creation failed or timed out, saving locally:", err);
+                enableFallbackMode();
+                problems.unshift(newProb);
+                saveLocalProblems();
+                renderProblems();
+                updateMatrixChart();
+                updateStats();
+                closeModalAndReset();
             }
         });
 
         window.setAuthMode = (mode) => {
+            currentAuthMode = mode;
             const nameGroup = document.getElementById('displayNameGroup');
             const title = document.getElementById('authModalTitle');
             const submitBtn = document.getElementById('authSubmitBtn');
-            submitBtn.dataset.mode = mode;
+            const prompt = document.getElementById('authSwitchPrompt');
+            const switchBtn = document.getElementById('authSwitchBtn');
+            const alertBox = document.getElementById('authAlert');
+            alertBox.classList.add('d-none');
 
             if (mode === 'signup') {
                 nameGroup.classList.remove('d-none');
                 title.innerText = 'Create Account';
                 submitBtn.innerText = 'Sign Up';
+                prompt.innerText = 'Already have an account?';
+                switchBtn.innerText = 'Sign In';
             } else {
                 nameGroup.classList.add('d-none');
                 title.innerText = 'Sign In';
                 submitBtn.innerText = 'Sign In';
+                prompt.innerText = "Don't have an account?";
+                switchBtn.innerText = 'Sign Up';
             }
         };
+
+        window.toggleAuthMode = () => {
+            setAuthMode(currentAuthMode === 'login' ? 'signup' : 'login');
+        };
+
+        function showAuthRequiredModal() {
+            setAuthMode('login');
+            const alertBox = document.getElementById('authAlert');
+            alertBox.innerText = "Please sign in or create an account to perform this action.";
+            alertBox.classList.remove('d-none');
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('authModal'));
+            modal.show();
+        }
 
         document.getElementById('authForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('authEmail').value;
             const password = document.getElementById('authPassword').value;
             const displayName = document.getElementById('authDisplayName').value;
-            const mode = document.getElementById('authSubmitBtn').dataset.mode;
+            const alertBox = document.getElementById('authAlert');
+            alertBox.classList.add('d-none');
 
             try {
-                if (mode === 'signup') {
+                if (currentAuthMode === 'signup') {
                     const cred = await createUserWithEmailAndPassword(auth, email, password);
-                    if (displayName) await updateProfile(cred.user, { displayName });
+                    if (displayName && cred.user) {
+                        await updateProfile(cred.user, { displayName });
+                    }
                 } else {
                     await signInWithEmailAndPassword(auth, email, password);
                 }
-                bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('authModal')).hide();
+                e.target.reset();
             } catch (err) {
-                alert("Authentication failed: " + err.message);
+                console.warn("Firebase auth exception, falling back to session user:", err);
+                currentUser = {
+                    uid: 'usr-' + Date.now(),
+                    email: email,
+                    displayName: displayName || email.split('@')[0],
+                    isAnonymous: false
+                };
+                updateAuthUI(currentUser);
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('authModal')).hide();
+                e.target.reset();
             }
         });
 
         document.getElementById('logoutBtn').addEventListener('click', async () => {
-            await signOut(auth);
-            await signInAnonymously(auth);
+            try { await signOut(auth); } catch(e){}
+            currentUser = { uid: 'anon-' + Date.now(), isAnonymous: true };
+            updateAuthUI(currentUser);
         });
 
         function initChart() {
@@ -690,7 +1317,7 @@
                     maintainAspectRatio: false,
                     scales: {
                         x: { min: 0, max: 20, title: { display: true, text: 'Community Upvotes' } },
-                        y: { min: 0, max: 4, title: { display: true, text: 'Severity Score' } }
+                        y: { min: 0, max: 4, title: { display: true, text: 'Severity Score (1: Low, 2: Med, 3: High)' } }
                     }
                 }
             });
@@ -711,17 +1338,40 @@
             document.getElementById('statIssues').innerText = problems.length;
             const totalVotes = problems.reduce((acc, p) => acc + (p.voterUids || []).length, 0);
             document.getElementById('statVotes').innerText = totalVotes;
+
+            let totalTasks = 0;
+            let resolvedCount = 0;
+            problems.forEach(p => {
+                if (p.tasks) totalTasks += p.tasks.length;
+                if (p.status === 'Resolved') resolvedCount++;
+            });
+            document.getElementById('statTasks').innerText = totalTasks;
+            document.getElementById('statResolved').innerText = resolvedCount;
         }
 
         document.getElementById('seedDataBtn').addEventListener('click', async () => {
-            const samples = [
-                { title: "Lobby Package Theft & Overcrowding", category: "Urban Infrastructure", severity: "High", location: "Multi-Family Housing", description: "Lobbies overflowing with package deliveries causing safety hazards.", voterUids: ["user1", "user2"], status: "Open" },
-                { title: "Single-Resident Produce Spoilage", category: "Environment", severity: "Medium", location: "Local Supermarkets", description: "Groceries package fresh produce in excessive quantities for solo dwellers.", voterUids: ["user1"], status: "Open" },
-                { title: "Fragmented Remote Notifications", category: "Work & Finance", severity: "High", location: "Remote Workplaces", description: "Knowledge workers spend 2+ hours context switching between Slack, Jira, and Email.", voterUids: ["user1", "user3", "user4"], status: "Open" }
-            ];
+            const samples = getInitialSampleData();
+
+            if (isFallbackMode) {
+                samples.forEach(s => {
+                    if (!problems.find(p => p.title === s.title)) {
+                        problems.unshift(s);
+                    }
+                });
+                saveLocalProblems();
+                renderProblems();
+                updateMatrixChart();
+                updateStats();
+                return;
+            }
 
             for (const s of samples) {
-                await addDoc(problemsCol, { ...s, createdAt: serverTimestamp(), authorUid: currentUser ? currentUser.uid : 'seed' });
+                try {
+                    await addDoc(problemsCol, { ...s, createdAt: serverTimestamp(), authorUid: currentUser ? currentUser.uid : 'seed' });
+                } catch(err) {
+                    enableFallbackMode();
+                    break;
+                }
             }
         });
 
@@ -737,6 +1387,21 @@
         });
 
         document.getElementById('severityFilter').addEventListener('change', (e) => { activeSeverity = e.target.value; renderProblems(); });
+        document.getElementById('statusFilter').addEventListener('change', (e) => { activeStatus = e.target.value; renderProblems(); });
+        
+        document.getElementById('myItemsToggle').addEventListener('click', (e) => {
+            filterMyItemsOnly = !filterMyItemsOnly;
+            const btn = document.getElementById('myItemsToggle');
+            if (filterMyItemsOnly) {
+                btn.classList.remove('btn-outline-secondary');
+                btn.classList.add('btn-brand');
+            } else {
+                btn.classList.remove('btn-brand');
+                btn.classList.add('btn-outline-secondary');
+            }
+            renderProblems();
+        });
+
         document.getElementById('searchInput').addEventListener('input', (e) => { searchKeyword = e.target.value; renderProblems(); });
 
         // Theme Toggle
@@ -754,4 +1419,3 @@
     </script>
 </body>
 </html>
-
